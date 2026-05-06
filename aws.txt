@@ -1,0 +1,138 @@
+
+AWS has 2 types of plans: 
+
+Validity : 6 Months..
+
+1. Free plan : AWS Offers 100$ credits and if you perform 5 taks, They give us more 100$..
+AWS Provides 200$ Credits to explore AWS services.. 
+--> You cannot launch services that cost us.. Everything allowed is under free plan.. 
+--> AWS Suspends your account after 6 months, if you dont upgrade yourself.. 
+
+2. Paid Plan : AWS Offers 100$ credits and if you perform 5 taks, They give us more 100$..
+AWS Provides 200$ Credits to explore AWS services.. 
+--> You can launch services that cost us.. You can use after 6 months also... 
+
+AWS Accepts cc/dc/upi.. UPI need manadate on 15k rupees.. 
+
+====
+
+Create an AWS acocunt. 
+
+Step 1 : Provide a valid email address, verify and provide Account Name..
+
+root user : User who have unrestricted access.. 			: We dont use this user for day-to-day activities..
+--> setup strong password
+--> Always recommended to enable MFA.
+
+Step 2 : Provide contact information
+--> Choose "Personal"
+--> Provide all information
+
+Step 3 : Provide your payment information
+--> AWS accepts Credit cards, debit cards, rupay, UPI
+
+Step 4 : COnfirm your identity by proividing govt approved card i.e; driving license, PAN card, aadhar card
+
+ "SMS" or "phone call"
+
+Step 5 : Confirm Identity using Phone / sms.
+
+Step 6 : We have multiple Support plans.. Based on support plans, we get assistance from AWS.. 
+
+Basic Support Plan : FREE
+--> Included for every account automatically.
+--> 24/7 access for AWS Documentation, AWS Re:Post..
+--> We can get support for "account and Billing related" queries.. 
+--> No technical assistance.. 
+
+Business Support : Starts from 29$/Month.. 
+--> AWS Recommended minimum plan for production workloads..
+--> AI First Powered 24/7 support
+--> 24/7 Phone/chat/web access to cloud support engineer..
+--> Critical case response : < 30 Minutes
+--> We can create unlimited tickets, Any IAM user can create ticket.. 
+
+Enterprise Support Plan : Starts from $5000/Month
+--> AWS Recommended thisplan for mission-critical production workloads..
+--> AI First Powered 24/7 support
+--> 24/7 Phone/chat/web access to cloud support engineer..
+--> Critical case response : < 15 Minutes
+--> We can create unlimited tickets, Any IAM user can create ticket.. 
+--> Designated TAM (Technical Account Manager) - Your personal aws expert
+--> AWS Conducts Annual reviews on "well architecture frameworks + architectural reviews"
+--> Multi-account support
+
+
+Unified Operations : From 50,000$/Month
+--> Everything from "Enterprise Support Plan"
+--> Critical response : < 5 Minutes
+--> 24/7 Proactive workload monitoring
+--> TAM + Domain Specialist Enginners + Incident Management
+--> recommend, if our env is missions critical workload that require enhaned resilience and application specific expertise.
+
+
+---------
+
+Case Severity:
+
+General Guidance: < 24 hrs
+System Impaired: < 12 hrs
+Production system impaired: < 4 hrs
+Production system down: < 1 hr
+Business critical system down : < 15 min
+Missions critical business system down : < 5 min
+
+
+=============================
+
+Why we need multiple users in an AWS account.?
+TO achieve, "least privilages mechanism" we need to create "IAM users" inside the same aws account..
+Using IAM, we can limit users to perform activities based on their job roles.. 
+IAM : We use this users for day-to daya ctivities.. 
+
+Storage admin : manage "s3" / storage on cloud				--> ec2 and created server.? Deleted DB.?
+Database Admin : Managed "rds", "dynamodb", "redshift"
+
+
+CEO : He has full rights
+
+Marketing : ..??
+Sales : 
+Developers : 
+House Keeping : ..?? 
+
+===========================
+
+Enable MFA on yur root account.
+
+--> Better enable Multiple MFAs.
+
+https://support.aws.amazon.com/#/contacts/one-support?formId=mfa
+
+===========================
+
+AWS Global Infrastructure : 
+
+Region : AWS Segregated entire world into geographic/Physical locaitons and we call it as "Regions".. 
+As of May, 2026: 39 Geographic Regions
+
+Availability Zone : Data Center or combination of multipe DCs.. 
+--> Every region contains atleast 2 AZs.. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
