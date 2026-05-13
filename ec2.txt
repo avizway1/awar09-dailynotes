@@ -158,6 +158,19 @@ icacls <keypair.pem> /remove "Authenticated Users"
 https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
 
 
+=========
+
+D: 13/05/2026
+
+
+
+
+
+
+
+
+
+
 
 
 

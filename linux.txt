@@ -1,0 +1,88 @@
+
+
+Why Linux.:
+Open-source operating system, Designed based on unix. It was created by Linus Torvalds, First release on Sep 17, 1991.
+
+Linux is Free, No licensing cost.
+Secure: Fewer virus and strong permissions
+Stable : Run for months/years without reboot
+Fast : It consumes very less resources than windows.
+COmmunity : Millions of devs help to improve this.
+
+Open source : we cna access the source code, we can modify, we can redistribute.. 
+
+General use : ubuntu, fedora, linux mint
+Enterprise : RHEL (Redhat), SUSE, Oracle Linux, Amazon Linux
+Community : AlmaLinux, CentOS
+Security Testing : Kali Linux, ParrotOS
+Lightweight : Puppy Linux, Lubuntu
+
+============
+
+In linux everything starts from / (root --> Top level (windows c:\ in windows))
+
+/root 	--> Home directory for roor user (In windows --> c:\users\administrator)
+/home 	--> Home directory for regular users (all other users than root)
+/bin 	--> Contains essential linux commands (ls, cp, pwd, cat)
+/sbin	--> System admin commands (reboot, iptables, blkid, mkfs)
+/etc	--> Configurations files (Settings for the servcies)
+/var	--> Variable data changes freq. (logs, documentrootpath, databases)
+	/var/log --> System log files
+/dev	--> Device files (hard disks, usb)
+
+
+/tmp	--> Temporary files (auto cleaned)
+/usr	--> User programs (C:\program files)
+/opt	--> Operational/thirdparty files
+/proc	--> Liove system info i.e; cpu, ram
+/boot	--> Boot files i.e; kernal, grub, vmlinuz
+/lib	--> Shared libraries (similar to .dll files windows)
+/mnt	--> Manual mount points
+
+
+
+whoami		: tells as what user we are working
+hostname	: Server name / laptop name
+pwd 		: Print working directory
+ls			: list the files / directory from the current location.
+cd 			: Change directory (used for navigation)
+cd ..		: Navigates to one step back on the current path
+
+cat			: used for viewing any inforamtion from the files
+
+cat /etc/os-release	: Get information about the OS
+
+uptime
+uptime -p	: Shows how long has the system been running.?
+
+man			: manual
+man <comamnd>
+
+<command> --help	: Quick help related to the command
+ls --help
+
+touch <file-name>	: Creates a zero byte file
+mkdir <name>		: Creates an empty directory
+ll					: long list
+cat <file-name>		: 
+
+ls -l				: Detailed list / long list
+ls -a				: List hidden filed/directories
+ls -lh				: Human readable file sized (KB. MB, GB)
+
+cd songs/			: Naviugates to thw songs directory, if it is available is current path
+cd ..				: Navigates to one step back on the current path
+cd ~				: Go to current users home directory
+cd -				: Go back the previous directory
+
+
+
+
+
+
+
+
+
+
+
+
