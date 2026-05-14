@@ -75,6 +75,138 @@ cd ..				: Navigates to one step back on the current path
 cd ~				: Go to current users home directory
 cd -				: Go back the previous directory
 
+============
+
+D: 14/05/2026
+
+
+touch file{1..10}.txt	: creates 10 files from 1 to 10 (i.e; file1.txt file2.txt ...)
+touch file-{a..z}.txt
+
+rm filename				: Delete a file
+rm file-{1..10}.txt		: Delete 10 files
+
+rmdir <dir-name>		: Deletes the empty directory
+
+rm -r <Dir-Name>		: Delete the non empty directory
+rm -rf <Dir-name>		: Delete the non empty directory Forcefully
+rm -rf *				: Deletes everything from current location
+
+rm s*					: Deletes all the files name starts with s
+
+----
+
+echo : Displays the message you enter in the terminal.
+
+> 	: It overwrites existing info, Only latest info will be availble
+>>	: It is going to add info to existing information.
+
+echo "Hello My name is Avinash" >> myinfo.txt 
+echo "Hello My name is Anudeep" >> myinfo.txt 
+echo "Hello My name is Aravind" >> myinfo.txt
+
+-----
+
+Copy and Paste : cp
+cp						: Copy and paste
+
+cp file1.txt folder/	
+cp -R <dir-1> <dir-2>	: copy entire directory to another directory
+
+Cut and Paste  : mv
+
+mv file1.txt folder/
+mv <dir-1> <dir-2>		: Move the entire directory to another directory
+
+--
+
+We can use "mv" command for rename purposes also.
+
+=============
+
+cat						: Displays all the file content
+more					: Displays the file content page by page (space bar) (standard)
+
+cd /home/ec2-user/
+
+cp /etc/passwd .		: Copy the passwd file to the current location
+
+head <file-name>		: Displays top 10 lines only
+tail <file-name>		: Displays last 10 lines only
+
+head -n 2 passwd		: shows top 2 lines only
+tail -n 2 passwd		: shows bottom 2 lines only
+
+sort passwd				: sort the file on alpha order
+sort -r passwd			: reverse sort the file on alpha order
+
+---
+
+grep : Global regular expression print : helps to search text within files.
+
+grep "root" passwd 			: Look for "root" and displays the entire lines content
+grep "ROOT" passwd			: displays nothing
+grep -i "ROOT" passwd		: Insensitive: Search for "root" "Root" "ROOT" "ROOt"
+
+grep "root" passwd test.txt	: search for "root" in multiple files
+
+grep "root" *				: search for word "root" in current path
+
+grep -r "avinash" /		
+
+grep -r "avinash" /home/
+
+ps aux | grep "ec2-user"		: Fileters the outpur of pas aux to show lines that matches with give word "ec2-user"
+
+=========
+
+vim : vi Improved : Text editor for linux OS.
+
+vi : original editor
+vim : Enhanced / Modified vi editor
+
+VIm has 2 modes..
+
+Currently in "Command Mode"--> Press "i" to get into Insert Mode (to write the data) 
+currently in "Insert Mode" --> Press "esc" to get into Command mode 
+
+:wq			: Write the info the file and quit from the editor
+:q!			: Quit without saving the changes to the file
+
+o			: Open a new line at cursor
+x			: Delete the character
+
+dw			: Delete the word
+dd			: Delete the entire line
+3dd			: Delete the next 3 lines from the cursor
+100dd		: Deletes 100 lines from the cursor
+
+nG			: Jumps to the specific line number
+22G			: Jump the cursor to line number 22
+
+=======
+
+Creating a file with HEREDOC / EOF
+
+cat <<EOF > brothers.txt
+anudeep
+aravindh
+vikas
+sathya
+naresh
+EOF
+
+cat <<EOF > greet.sh
+> #!/bin/bash
+> echo "hello from my script"
+> echo "Today is $(date)"
+> EOF
+
+==========================
+
+
+
+
 
 
 
