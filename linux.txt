@@ -204,11 +204,109 @@ cat <<EOF > greet.sh
 
 ==========================
 
+D: 15/05/2026
 
 
+Pckage management : 
+
+RPM : Redhat package manager : outdated.. 
+--> It has a limitation, Does not resolve dependencies automatically.
+
+rpm -ivh pckage.rpm
+
+---
+
+YUM (Yellowdog updater modeified) : Its a wrapper to RPM, that can resolve the dependencies automatically.
+
+sudo yum update
+
+yum search <package-name>
+yum install <nginx/httpd/mariadb/mysql8>
+
+which tree					: Verify tree package instalaltion status
+
+sudo yum install tree 		: Interactive installation
+sudo yum install tree -y	: non-interactive installation (picks yes as default option)
+
+sudo yum remove tree
+
+===
+
+DNF (Dandified YUM) : Modern package manager that is replacing yum in latest linux distro.
+--> Faster depencies resolution
+--> pluin based architecture.
+
+sudo dnf update -y
+
+sudo dnf install tree -y
+
+sudo dnf search <package>
+sudo dnf info <package>
+sudo dnf remove <pckage>
+sudo dnf list installed
+
+===============
+
+Make your ec2 instance as webserver.. 
+
+sudo dnf install httpd -y
+
+sudo systemctl status httpd			: To check httpd servcie status
+sudo systemctl start httpd			: To start httpd servcie 
+sudo systemctl stop httpd			: To stop httpd servcie 
+sudo systemctl restart httpd		: To restart httpd servcie 
 
 
+We can make the service as logon service: 
+--> sudo systemctl enable httpd
 
+--> Open cmd --> servcies.msc --> and observe the startup type.
+
+ERR_CONNECTION_TIMED_OUT 			: Traffic is not reaching the instance, it is not allowed at SG level.
+ERR_CONNECTION_REFUSED				: SG level no issue, Problem with the service
+
+SG act as firewall at instance level.. Inbound and outbound traffic filter happens here.. 
+
+HTTP : Hypertext transfer ptotocol : Port : 80
+
+To serve our own content, We have "DocumentRoot" Path.. You can place your webpages in this path : 
+http: /var/www/html/
+nginx: /usr/share/nginx/html/
+
+
+sudo init 6							: reboot the instance
+sudo init 0							: Shutdown the instance
+
+---
+
+Default httpd port number is 80, Can we chage the port number.?
+
+Ans: Yes.. We need modify the httpd configuration
+
+Httpd config path: /etc/httpd/conf/httpd.conf
+
+sudo vim httpd.conf
+at line number 47, change LISTEN to desired port number.. 8080 / 8888 / 8088
+
+As we did configuration changes, need to restart the service.. 
+
+http://3.108.41.112/				--> Picks port 80 as it is http default port
+http://3.108.41.112:8080/			--> look for http port response on port 8080
+
+---
+
+WORKING with ZIP files
+
+zip songs.zip song1.mp3 song2.mp3 song3.mp3		--> zips 3 files into songs.zip dir
+zip songs.zip *									--> picks everything from current directory
+zip -r everything.zip directory-name/			--> zips including subdirectories and files
+
+unzip songs.zip									--> unzip in current path
+unzip -l songs.zip								--> shows all files without unzipping
+
+tar:
+tar -cavf songs.tar.gz song1.mp3 song2.mp3 song3.mp3	--> create a zip directory with .tar.gz format
+tar -xzvf songs.tar.gz									--> unzip the directory
 
 
 
