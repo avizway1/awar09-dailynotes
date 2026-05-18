@@ -257,6 +257,13 @@ sudo systemctl stop httpd			: To stop httpd servcie
 sudo systemctl restart httpd		: To restart httpd servcie 
 
 
+service httpd status
+service httpd start
+service httpd stop
+service httpd restart
+chkconfig httpd on
+
+
 We can make the service as logon service: 
 --> sudo systemctl enable httpd
 
@@ -307,6 +314,133 @@ unzip -l songs.zip								--> shows all files without unzipping
 tar:
 tar -cavf songs.tar.gz song1.mp3 song2.mp3 song3.mp3	--> create a zip directory with .tar.gz format
 tar -xzvf songs.tar.gz									--> unzip the directory
+
+====================
+
+D: 18/05/2026
+
+top 				: Realtime process view in linux os
+htop				: better UI version to top comamnd
+
+ps					: snapshot of processes
+ps aux				: all users, all processes
+
+ps aux | grep sleep
+
+TO kill a process we have 2 options : 
+
+kill <pid>			: graceful / gentle request to kill the process (SIGTERM - Signal 15)
+kill -9 <pid>		: Forecefully r kill the process (SIGKILL - Signal 9)
+
+pstree				: Shows the process tree in hierarchy structure,
+
+--> We can identify the process using name: 
+
+pidof httpd			: To identify the process id
+pgrep sleep			: To identify the process id
+pkill sleep			: To kill a process using name
+
+--
+
+free				: SHows the memory usage
+free -h				: Human readable values (mb / gb)
+
+free -m
+free -g
+
+watch -n 5 free -h
+
+=============================
+
+User management in Linux OS : 
+
+/etc/passwd			: Contains user details
+/etc/shadow			: Encrypted passwords
+/etc/groups			: Group details
+/etc/sudoers		: Sudo permisisons applied using this file (DOnt try to edit manually)
+
+who / w				: We can see who logged into the system currently
+
+
+user id for root user is : 0
+ec2-user user id is : 1000
+all non root users gets the id from 1000
+
+id <username>			: to identity the user id
+
+sudo useradd avinash		: creates user with name: avinash along with home directory
+sudo useradd -m avinash		: Explicitly passing argument to create home dir
+sudo passwd avinash			: Setting up password for user
+
+sudo useradd -c "Test user for comment" testuser	: user creates with a comment
+
+sudo userdel testuser		: Deletes the user, but keeps the home directory
+sudo userdel -r testuser	: Delete user and home directory of the user
+
+sudo usermod -L avinash		: Lock user account (disable login)
+sudo usermod -U avinash		: unlock the user (enable user)
+
+sudo su						: 
+	--> Environment inherited
+	--> you will be on same working directory
+	--> variables may be mixed with other users
+	
+sudo su - 					: Best practice is to use "sudo su -"
+
+	--> Environment is clean (only root's)
+	--> you will be on /root
+	--> variables will be reset
+
+
+sudo groupadd developers				: Create a group with name developers
+sudo usermod -aG developers	avinash	: added avinash to developers group
+getent group developers
+
+sudo usermod -aG wheel avinash
+
+wheel group has permisisons to run any command at any location, so adding users to wheel group allows user to use "sudo"
+
+cd ~								: Takes the user to his home directory
+
+can we change any users home directory.? 
+Ans : sudo usermod -d /home/newhome avinash			--> Migrate the user to new home directory
+
+-------
+
+We cannot login to instance using username and password, we need to adjust the sshd config.. 
+
+ssh conf path: /etc/ssh/sshd_config
+
+Set/adjust "PasswordAuthentication" to "yes" and then restart the service. 
+
+sudo systemctl restart sshd
+
+============
+
+export NAME=avinash
+export AGE=36
+
+THis lasts till instance reboot.. to make it perm, add it to the bashprofile
+
+vim ~/.bashrc
+
+export NAME=avinash
+export AGE=36
+
+source ~/.bashrc
+
+---
+
+hello.txt
+
+#!/bin/bash
+echo "hello from the script"
+echo "My name is $NAME and my age is $AGE"
+echo "Todays is $(date)"
+
+=========================
+
+
 
 
 
