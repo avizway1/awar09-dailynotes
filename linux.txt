@@ -769,6 +769,165 @@ crontab -e			-> We can edit/ crate cronjobs.
 @weekly
 @monthly
 
+====================
+
+D: 21/05/2026
+
+
+Storages : HDD & SSD
+
+IOPS : Input and Output Operations Per Second
+
+Block Size : 4 kb, 8 kb, 16 kb, 4096kb
+latency : The time takes to process a single I/O operation
+Throughput : At what rate, data transmission is happening.. mb/s, gb/s.. 
+
+IOPS = throughput x 1024 / Blocksize
+
+-------
+
+EBS : gp2, gp3, io1, io2, sc1, st1 and standard
+
+SSD : gp2, gp3, io1, io2
+HDD : sc1, st1
+Magnetic : Standard
+
+
+root Volume : Volume that contains/runs required OS for our instance : gp2, gp3, io1, io2
+Addl Volume : Data volumes : gp2, gp3, io1, io2, sc1, st1
+
+---
+
+GP : General Pursuses SSD : We can use this type for most common workloads.. 
+
+gp2 : Min 1GB, Max 16 TB.. Based on volume size, we get IOPS, We get on 1:3 ratio (1 gb volume : 3 IOPS, with min of 100 IOPS)
+gp3 : Min 1GB, Max 16 TB.. (Min: 3000 IOPS, Max: 80000 IOPS).. We can adjust the IOPS count, if req.. 
+
+---
+
+io1 and io2 : If any workload demands specific IOPS count, we can choose this.. ($$$)
+
+io1 : Min: 4 GiB, Max: 16384 GiB... IOPS for 100 GB.. Min: 100 IOPS, Max: 5000 IOPS (up to 50 IOPS per GiB)
+io2 : Min: 4 GiB, Max: 16384 GiB... IOPS for 100 GB.. Min: 100 IOPS, Max: 100000 IOPS (up to 1000 IOPS per GiB)
+
+---
+
+HDD : COmpare to SSD, THis gives less perf.. 
+
+st1 : Suitable for bigdata, data warehousing and log preocessing at low cost.. 
+sc1 : Suitable for bigdata, data warehousing and log preocessing at low cost than ST1, but with less performance.. (Suitable for less freq accessed data)
+
+----
+
+lsblk
+df -Th
+file -s
+mkfs
+mkdir
+mount
+xfs_growfs
+growpart
+
+----
+
+lsblk : list all block devices (disk and partitions).. also, shows the mounted and unmounted volumes.. 
+df -Th : show disk space with file system type : Shows only mounted and OS uitlising volumes.. 
+
+windows os file system : FAT16, FAT32, NTFS, ReFS
+Linux OS file system : ext3, ext4, xfs
+
+
+
+Step 1 : Identify the attached volume name & full path.
+run lsblk and identify the volume name : nvme1n1
+Volume full path: /dev/nvme1n1
+
+Step 2 : Verify the file system status inside the new volume
+
+sudo file -s /dev/nvme1n1
+
+output : Data --> No File system
+XFS --> SGI XFS filesystem data (No need to write file system, your existing data may erase - Skip step 3)
+
+Step 3 : Write the file system in new volume and reverify using file -s command
+
+sudo mkfs -t xfs /dev/nvme1n1
+
+Step 4 : Create a directory and mount the volume to the directory.
+
+cd /mnt
+sudo mkdir newvol
+
+sudo mount /dev/nvme1n1 /mnt/newvol
+
+--
+
+Step 5 : Make the mount persistent (Should survive the reboot, Instance stop & start operations)
+
+grab the new volume entry from temp mount file : /etc/mtab
+
+write the entry into : /etc/fstab file
+
+cat /etc/mtab | grep nvme1n1
+
+/dev/nvme1n1 /mnt/newvol xfs rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,sunit=8,swidth=8,noquota 0 0
+
+sudo vim /etc/fstab
+
+pick above entry and write (dont disturb existing lines)
+
+--------
+
+How to increase an existing ebs volume. 
+
+step 1 : modify the volume at aws cnsole and add more storage
+
+step 2 : run lsblk and verify the addl storage allocation
+
+lsblk : showing 4 gb
+df -Th : showing 2 gb only
+
+step 3 : extend the file system of the volume
+
+sudo xfs_growfs -d /mnt/newvol
+
+----
+
+TO increase root volume size, First add more stirage at aws console, then extend the partition.. 
+
+run lsblk and verify status.. then extend the part
+
+sudo growpart /dev/nvme0n1 1
+
+========
+
+** In EBS, We dont have option to decrease the volume size. 
+
+========
+
+STOP : We dont loss any data, we cna start and resume our work
+TERMINATE : Instance not required, We can delete it. 
+
+---
+Can we protect our instances from Accidental STOP / TERMINATIONs. 
+
+Enable Stop protection
+Enable termination protection
+
+If you enable stop protection, user cant terminate the instance.
+
+Shutdown behaviour : What should happen to the instance at aws console, if we initialised "shutdown" operation at OS level. (STOP / TERMINATE) THis will have more priority comared to "STOP Protection".
+
+sudo init 0	--> stop
+
+----
+
+
+
+
+
+
+
 
 
 
