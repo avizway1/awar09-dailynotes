@@ -675,8 +675,6 @@ EIP / Elastic IP : A dedicated / fixed IP address we can allocate to our ec2 ins
 (Associated / unassociated - You get charged - 3.5 USD / Month)
 
 
-ALB : Application Load Balancer Supports "http" & "https" protocols only.
-NLB : Network Load Balancer Supports "TCP, TLS" & "UDP" protocols only.
 
 
 Target group supports multiple Target Types : 
@@ -712,9 +710,79 @@ http satus code :
 4XX : Client Side
 5XX : Server Side
 
+===========================
+
+D: 04/06/2026
+
+** We always enable logs at LB level. We call it as "Access logs". 
+
+Access logs: Access logs deliver detailed logs of all requests made to your load balancer. 
+Connection logs : Connection logs deliver detailed logs of all connections made to your load balancer. 
+Health check logs : Health check logs deliver detailed logs of health checks for all targets in your load balancer's target groups. 
 
 
+ALB / Application Load Balancer : Also called as Layer 7 LB as it works at OSI layer 7. 
 
+ALB : Application Load Balancer Supports "http" & "https" protocols only.
+ALB dont support fixed/static public ip.
+
+ALB reads the web traffic and it can make intelligent routing decisions.
+
+--> ALb supports path based routing
+/api/*		--> Backend API
+/ui/* 		--> Frontned
+
+Host Based routing:
+
+api.avizacademy.com		--> API Server
+lms.avizacademy.com		--> LMS Server
+
+
+--> ALB Supports Stickyness.. Session sticks to a particul resource for defined duration. 
+
+--> ALB Supports 3 types of algorithms:
+1. Nested round robin algorithm : 
+2. Least Outstanding Request routing : 
+3. Weighted Random  with automatic Target Weights (ATW) Routing: 
+
+
+---
+
+NLB : It works at layer 4 (Transport Layer) : NLB supports millions of requests per second, with ultra low latency.
+NLB : Network Load Balancer Supports "TCP, TLS" & "UDP" protocols only.
+It receives the network pocket and forward them as fast as possible to destination.
+
+--> NLB supports a fixed/static IP address.
+
+7. Application				--> Application LB
+6. Presentation layer
+5. Session layer
+4. Transport layer			--> Network LB
+3. Netowrk layer
+2. Data link layer
+1. Physical layer
+
+
+========================
+
+ASG Pre-Requesites:
+
+1. Launch an ec2 instance (treat it as Base instance)
+2. Connect to instance and make it as webserver and do basic configuration
+3. Create a EFS and mount it to ec2 instance using DNS Name.
+4. Reboot the instance and validate the config.
+5. Create a goldenAMI
+6. Create a Launch Template with required settings, use GoldenAMI created at step 5.
+7. Create a Target group and Create a Load Balancer (empty)
+
+Create ASG, Use Step 6 Launch template and Step 7 Load Balancer.
+
+--> Simple scaling
+--> Step scaling
+--> Target Tracking Scaling
+--> Scheduled Scaling
+
+--> Insatance Refresh for zero downtime configuration migrations.
 
 
 
