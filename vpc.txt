@@ -130,22 +130,105 @@ Ans: Which Class
 VPC CIDR Range : 
 192.168.100.0/24			--> 251 Usable IPs
 
-Public Subnets : web-subnets
-192.168.0.0/27 - ap-south-1a
-192.168.0.32/27 - ap-south-1b
+Public Subnets : web-subnet-1a
+192.168.100.0/27 - ap-south-1a
+192.168.100.32/27 - ap-south-1b
 
-Private Subnets : app-subnets
-192.168.0.64/27 - ap-south-1a
-192.168.0.96/27 - ap-south-1b
+Private Subnets : app-pvt-subnet-1a
+192.168.100.64/27 - ap-south-1a
+192.168.100.96/27 - ap-south-1b
 
-private Subnets : db-subnets
-192.168.0.128/27 - ap-south-1a
-192.168.0.160/27 - ap-south-1b
+Private Subnets : db-pvt-subnet-1a
+192.168.100.128/27 - ap-south-1a
+192.168.100.160/27 - ap-south-1b
 
-Future usage: 192.168.0.192/26		--> 62 for Future Usage
+Future usage: 192.168.100.192/26		--> 62 for Future Usage
 
 =============
 
+D: 11/06/2026
+
+
+Public Subnets: Use public subnets for web applications that need to be publicly accessible over the internet.
+
+Private subnets: Use private subnets to secure backend resources that don't need public access.
+
+In a region, we cna have only 1 default vpc. 
+
+Step 1 : Create a VPC with Selected CIDR block. : CustomApp
+192.168.100.0/24
+
+When we create a vpc, automatically we get "Default Security group", Default NACL and Main Route Table.
+
+Step 2 : Create Subnets within the VPC.
+
+Public Subnets : web-public-1a
+192.168.100.0/27 - ap-south-1a
+192.168.100.32/27 - ap-south-1b
+
+Private Subnets : app-pvt-subnet-1a
+192.168.100.64/27 - ap-south-1a
+192.168.100.96/27 - ap-south-1b
+
+Private Subnets : db-pvt-subnet-1a
+192.168.100.128/27 - ap-south-1a
+192.168.100.160/27 - ap-south-1b
+
+
+Step 3 : Create an Internet Gateway / IGW.. and attach it to our CustomVPC..
+* One VPC Can have only 1 IGW.
+
+
+Step 4 : Create required route tables.. 
+
+4.1 Public Route : Add Public Subnets Here.. and add a Route via IGW.
+4.2 Private Route- with Internet : Add App Subnets here..
+4.3 private Route - without Internet : Add DB Subnets here.. 
+
+All the subnets we are creating in this VPC, will be part of "main route table".. If you have any subnet not associated with any other route table, will be part of Main route table..
+
+
+Step 5 (Optional but recommended) : Enable Auto Assign public IP address to public subnets.
+
+Navigate to Subnets, Choose Public subnets, edit sbnet settings --> Enable auto assign public ip 
+
+Step 6 (Optional but recommended) : Enable DNS hostnames at VPC level.. 
+
+----
+
+Launch an ec2 instance in Public SUbnet.. How to connect : We get a public IP and use it and connect.. 
+
+Another instance in Private Subnet.. : 
+TO connect to Private subnet instance.. 
+
+=====================
+
+Requirement : I need Internet connecvity for my Private Sbnet instances. 
+
+Why: To access any APIs over internet / OS Patching / Custom downloads..
+
+NAT Gateway (Network Address Translator): This component designed to provide internet to private subnet ec2 instances, "without making instances public". 
+**COST US Per Hour Basis..
+
+Regional : Scales automatically across all regional AZs, simplifying management for multi AZ deployments.
+Zonal : NAT creates in a specifi AZ.. 
+
+=====================
+
+Flowlogs : TO capture all the traffic flows at network level, we can enable VPC flowlogs.. 
+We can store all these logs into s3 bucket / cw logs group.
+
+--> We can enable logging at 
+1. VPC Level
+2. Subnet Level
+3. Instance level
+
+======================
+
+
+NACLs
+VPC Endpoints
+VPC Peering
 
 
 
