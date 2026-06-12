@@ -181,8 +181,8 @@ Step 3 : Create an Internet Gateway / IGW.. and attach it to our CustomVPC..
 
 Step 4 : Create required route tables.. 
 
-4.1 Public Route : Add Public Subnets Here.. and add a Route via IGW.
-4.2 Private Route- with Internet : Add App Subnets here..
+4.1 Public Route : Add Public Subnets Here.. and add a Route via IGW with 0.0.0.0/0.
+4.2 Private Route - with Internet : Add App Subnets here..
 4.3 private Route - without Internet : Add DB Subnets here.. 
 
 All the subnets we are creating in this VPC, will be part of "main route table".. If you have any subnet not associated with any other route table, will be part of Main route table..
@@ -198,12 +198,11 @@ Step 6 (Optional but recommended) : Enable DNS hostnames at VPC level..
 
 Launch an ec2 instance in Public SUbnet.. How to connect : We get a public IP and use it and connect.. 
 
-Another instance in Private Subnet.. : 
-TO connect to Private subnet instance.. 
+Another instance in Private Subnet.. :  TO connect to Private subnet instance.. 
 
 =====================
 
-Requirement : I need Internet connecvity for my Private Sbnet instances. 
+Requirement : I need Internet connecvity for my Private Subnet instances. 
 
 Why: To access any APIs over internet / OS Patching / Custom downloads..
 
@@ -215,7 +214,7 @@ Zonal : NAT creates in a specifi AZ..
 
 =====================
 
-Flowlogs : TO capture all the traffic flows at network level, we can enable VPC flowlogs.. 
+Flowlogs : To capture all the traffic flows at network level, we can enable VPC flowlogs.. 
 We can store all these logs into s3 bucket / cw logs group.
 
 --> We can enable logging at 
@@ -225,10 +224,53 @@ We can store all these logs into s3 bucket / cw logs group.
 
 ======================
 
+D: 12/06/2026
 
-NACLs
-VPC Endpoints
-VPC Peering
+Endpoints : Endpoints helps to establish the connectivity between multiple aws services, without internet requirtement. 
+
+--> If you have an ec2 instance with Internet, if you attach an IAM role and accessing S3 Data, the request flows over the internet and we get the respose from s3 service (s3.ap-south-1.amazonaws.com)
+
+--> Interface Endpoint : We get NIC/ENI Card, traffic flows over the NIC card. per hour cost involved.
+--> Gateway Endpoint : We get aws managed ENI, We get charged for only data transfer. (S3, DyanamoDB)
+
+Self Reffering SG : Allow traffic from any network interface that has this exact same security group attached.
+
+=================
+
+SG : Act as a firewall at Instance level. SG are "stateful"..
+
+If traffic is allowed in, the response is automatically allowed out.
+
+inbound: http --> 80 --> 0.0.0.0/0
+
+user --> ec2 on port 80 --> request is allowed.
+ec2 --> user on port 80
+
+--> even though, if no port id opened with 80 at outbound rule, traffic still delivers to user.
+
+--> SGs only allows the trrafic. There is no DENY option.
+
+
+
+-----
+
+NACL : Network ACL : Its is attached to Subnet Level. Its stateless.. 
+
+AWS does not remember previous connections. Both directions must be explicitly allowed.
+
+NACLs respond back to outside world using Ephemeral ports / temp ports (1024-65535)
+
+NACLs allows the traffic and DENY the traffic. 
+
+--> Every VPC will have a default NACL, and it allows all the traffic, It wont verify anything.
+
+
+
+
+
+
+
+
 
 
 
