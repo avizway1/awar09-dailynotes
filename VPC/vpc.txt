@@ -264,7 +264,7 @@ NACLs allows the traffic and DENY the traffic.
 
 --> Every VPC will have a default NACL, and it allows all the traffic, It wont verify anything.
 
-
+--> if we create any new NACL, It wont allow any inbound / outbound traffic. 
 
 
 
