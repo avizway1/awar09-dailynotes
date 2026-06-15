@@ -267,6 +267,104 @@ NACLs allows the traffic and DENY the traffic.
 --> if we create any new NACL, It wont allow any inbound / outbound traffic. 
 
 
+=================
+
+D: 15/06/2026
+
+VPC Peering: This feature helps to enable communciation between multiple VPCs. 
+
+--> VPC peering is non-transitive. 
+--> If we want to establish connection between 2 VPCs (Requester VPC & Accepter VPC), These 2 should not have same CIDR or / overlap CIDR ranges. 
+
+Requester VPC and Accepter VPC can be in same region.
+Requester VPC and Accepter VPC can be in Different region.
+Requester VPC and Accepter VPC can be in same region across 2 Diff accounts.
+Requester VPC and Accepter VPC can be in Different region across 2 Diff accounts.
+
+
+				Requester VPC				Accepter
+Acc ID			655700896650				828477980115
+VPC ID			vpc-0f24744386b0fa9a1		vpc-02b56578804864034
+CIDR Range		192.168.100.0/24			192.168.200.0/24
+region			ap-south-1					ap-south-2
+
+
+telnet <host> <port>
+
+Step 1 : Got to requesrer VPC and create a peering connection and provide accepter's vpc id, region and account id.
+
+Step 2 : Go to Accepter VPC peering page, Review and Accept the connection. 
+
+Step 3 : At requester VPC, Update the route table with Accepter VPCs CIDR range via peering Connection.
+
+Step 4 : At Accepter VPC, update the route tables with Requester VPCs CIDR range via peering connection.
+
+
+
+=======================
+
+
+Central NW account = Where Transit Gateway got created
+
+Step 1 : Create a TGW in Central networking account.
+
+Step 2 : using RAM service, Share the TGW wit all member accounts. In member account, choose the same region and accept the share in RAM service. 
+
+Step 3 : In Central NW account, Create a TGW Attachment with local VPC Subnet. 
+
+Step 4 : IN Member account, Create a TGW attachment with local VPC Subnets. 
+
+Step 5 : Switch to "Central NW VPC TGW", Choose the Attachment and accept it. (Accepting the step 4 created attachment)
+
+Step 6 : Edit member account's route table with Central NW account VPC CIDR.
+
+Step 7 : Edit Central NW VPC account route table with member account VPC CIDR.
+
+
+======================
+
+For IPv4, To provide internet to private subnets instances, we have "NAT Gateway", In similar for IPv6, We have a component "Egress only internet Gateway".
+
+---
+
+Can we extend existing VPC's CIDR range. 
+Ans: We cannot edit existing VPC CIDR range, But, We can add a New CIDR and Extend the existing VPC. 
+
+--> Create a new subnet, with New CIDR range, we attached to VPC. 
+All Routetables updates with new cidr range as local route.
+
+---
+
+
+VPN : Virtual Private Network
+
+Site-to-site VPN : 
+
+Step 1 : Create Customer Gateway : Office firewall device ip required to create the CGW.
+STep 2 : AWS End virtual device : VPG Virtual Private Gateway
+Step 3 : Using CGW and VPGW, create a S-2-S Connection and download the configuration based on firewall manifacturer.
+
+
+f5
+fortinet
+dell sinicwall
+watchguard
+palo alto
+cisco
+yamaha
+
+===============
+
+AWS Direct Connect : We have a create a request for Direct connect with one of the AWS partner telecom provider. Then we need to submit LoA (Letter of authorisation).. then Partner will fetch fiber cable and establish the connectivity between AWS and On-Premises.
+
+process takes approx: 3-4 months
+
+
+ 
+
+
+
+
 
 
 
