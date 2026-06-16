@@ -1,0 +1,121 @@
+
+
+Persistent Storage
+Fast Data Retrival
+Multi User Support
+Data Integrity
+Security
+
+RDS : Relational Database Servcie : 
+
+1. Amazon Aurora 
+	1.1 Aurora Mysql Compatable edition
+	1.2 PostgreSQL Compatable Edition
+2. Mysql : 3306 : Mysql workbench / dbeaver
+3. MSSQL : 1433 : SSMS (SQL Server Management Studio)
+4. MariaDB : 3306 : workbench / dbeaver
+5. PostgreSQL : 5432 : PgAdmin
+6. Oracle DB : 1521 : SQL developer / Toad
+7. IBM DB2 : 50001 (ssl) : IBM Enterprise tool
+
+
+OnPremise Self Managed Database : H/w, OS, OS Updates, DB Installation, DB Linces, DB Backups, DB HA, Db FT..
+EC2 Instance hosted DBs : OS Updates, DB Installation, DB License, DB Backups, DB HA, Db FT..
+RDS : Everything aws manages, Backup, FT, HA are just a click away.. 
+
+With RDS, We dont get any option to login to OS level.
+
+----
+
+Pre-Req : We need to create a "Database DB Subnet Group" and choose the VPC Subnets dedicatedly created/allocated for DB workloads. 
+
+Create a Security Group for Database server.. Don't expose to the world / Entire VPC. 
+**DB Should be accesable only from APPLication Servers and JUMP Servers. 
+
+DB Engine : Mysql
+Full Configuration
+Fee Tier
+Single-AZ DB instance deployment (1 instance)
+Engine Version : 8.4.8 (Org : We follow n-1 / n-2 mechanism)
+
+un: dbadmin
+pwd: Avinash12345
+
+t4g.micro (graviton processors works better and cost less)
+
+general Porpose storage, Size : 20 gb and gp3
+
+ChooseVPC : Custom VPC
+Choose DB Subnet group 
+
+Create a Security group--> Open "mysql --> JUMP SG & APP Servers SG"
+
+Enable enhanced Monitoring for UAT and Prod worklaods
+logs : Error logs and Slow Query logs are good to monitor
+
+DB : myfirstdb
+
+---
+
+When we create an RDS, We get an Endpoint.. EP is hard to remember, Use Route53 and map a DNS name with RDS Endpoint..
+
+sudo dnf install mariadb105 -y 
+
+which mysql
+
+mysql -h rds.awswithavinashreddy.com -u dbadmin -P 3306 -p
+
+Endpoint  : mydbawar09.c1ekg4m6e0fi.ap-south-1.rds.amazonaws.com
+R53 CNAME : rds.awswithavinashreddy.com
+
+
+SHOW DATABASES;
+
+CREATE DATABASE mystudentdb;
+
+USE mystudentdb;
+
+CREATE TABLE users ( id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100),
+age INT
+);
+
+DESC users;
+
+INSERT INTO users (name, age) VALUES ('Avinash','36');
+INSERT INTO users (name, age) VALUES ('Anudeep','34');
+INSERT INTO users (name, age) VALUES ('Aravind','32');
+
+SELECT * FROM users;
+SELECT * FROM users LIMIT 1;
+SELECT * FROM users WHERE age > 33;
+
+UPDATE users SET age = 37 WHERE name = 'Avinash';
+
+DELETE FROM users WHERE name = 'Avinash';
+
+TRUNCATE TABLE users;		--> Delete all the data from a table
+
+DROP DATABASE mystudentdb;
+
+SELECT user, host FROM mysql.user;			--> Show users in DB
+
+CREATE USER 'avinash'@'%' IDENTIFIED BY 'Password123';
+
+GRANT SELECT, INSERT, UPDATE on mydb.* TO 'avinash'@'%';
+
+FLUSH PRIVILEGES;
+
+exit;
+-------------
+
+
+
+
+
+
+
+
+
+
+
