@@ -109,6 +109,41 @@ FLUSH PRIVILEGES;
 exit;
 -------------
 
+D: 17/06/2026
+
+Single-AZ DB instance deployment (1 instance) : Creates a single DB instance without standby instances. This setup provides: 99.5% uptime and No data redundancy..  (20$/Month)
+
+Multi-AZ DB instance deployment (2 instances) : Creates a primary DB instance with a non-readable standby instance in a separate Availability Zone. 
+This setup provides: 99.95% uptime.. Redundancy across Availability Zones (40$/Month)
+
+Multi-AZ DB cluster deployment (3 instances): Creates a primary DB instance with two readable standbys in separate Availability Zones. This setup provides 99.95% uptime.. Redundancy across Availability Zones.. Increased read capacity.. Reduced write latency (60$/Month)
+
+
+10.0.138.244
+10.0.158.205
+
+ROle : Instance
+
+Role : Primary
+Replica
+
+----
+
+RDS Backtrack is a specialized feature for amazon aurora mysql-compatable edition that allows us to "rewind" a database to a specific point of time without needing  to restore from a backup. Mac windows it support is 72 hours.
+
+---
+
+Primary : mysqltest.cjmu48ickkmj.ap-south-1.rds.amazonaws.com
+
+Read : mysqlreplica.cjmu48ickkmj.ap-south-1.rds.amazonaws.com
+
+
+mysql -h mysqlreplica.cjmu48ickkmj.ap-south-1.rds.amazonaws.com -P 3306 -u dbadmin -p
+
+We can promote a read replica to a stand alone db instance, But we cannot re establish the replication again. 
+
+
+PITR : Point in time recovery option : 
 
 
 
