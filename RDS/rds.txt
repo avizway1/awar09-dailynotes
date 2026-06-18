@@ -127,9 +127,7 @@ ROle : Instance
 Role : Primary
 Replica
 
-----
 
-RDS Backtrack is a specialized feature for amazon aurora mysql-compatable edition that allows us to "rewind" a database to a specific point of time without needing  to restore from a backup. Mac windows it support is 72 hours.
 
 ---
 
@@ -144,6 +142,55 @@ We can promote a read replica to a stand alone db instance, But we cannot re est
 
 
 PITR : Point in time recovery option : 
+
+===============================
+
+D: 18/06/2026
+
+Amazon Aurora : 
+	1. Mysql compatable edition
+	2. postgresql compatable edition
+	
+ACU : Aurora Capacity units
+1 CPU = 2 GB Memory
+We can define min ACUs and Max ACUs
+
+Most of other DBs max size is : 64 TB.. But Aurora supports upto 128 TB.
+Aurora replicates data/storage : sizway replication across 3 AZs.. 
+UP to 15 read replicas with replicantion lag below 10ms
+Automatic monitoring with failover. (We cna manually perform failover)
+
+Aurora dont have option to disable the backups
+Min backup retention : 1 Day
+Max backup retention : 35 Days
+
+myaurora-instance-1 --> writer instance
+myaurora-instance-1-ap-south-1b --> Reader instance
+
+----
+
+RDS Backtrack is a specialized feature for amazon aurora mysql-compatable edition that allows us to "rewind" a database to a specific point of time without needing  to restore from a backup. Mac windows it support is 72 hours.
+
+==================
+
+DynamoDB : NoSQL database service, All the Data stores in JSON format.. Comes with only serverless option.. 
+--> Single digit millisecond latency at any scale of data.
+
+--> Has a feature called "global tables", We can replicate data to other region. 
+
+--> DynamoDB also has a caching solutions, named; "DAX - DynamoDB Accelerator".
+
+================
+
+RDS Has a caching service "Elasticache"
+
+Elasticache support 3 caching engines
+
+--> Redis OSS
+--> Valkey Cache : * Recommended
+--> MechacheD
+
+
 
 
 
