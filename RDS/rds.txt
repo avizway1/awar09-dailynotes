@@ -191,6 +191,89 @@ Elasticache support 3 caching engines
 --> MechacheD
 
 
+===============
+
+D: 19/06/2026
+
+
+CRUD : Create, Read, Update and Delete
+
+OLTP : Online Transaction Processing : RDS : Run the business
+--> Mainly focused on Operational data
+--> We can perform CRUD operations.
+
+--> Banking transactions
+--> Online shopping
+--> E-commerce
+--> ATM Withdrawal
+
+
+OLAP : Online Analytical Processing : Redshift, Databriks, Snowflake
+--> Reads huge amount of historical data, We can use this for business analytical purpose.
+--> Complex queries
+--> We can perform analysis and we can take decisions based on analysis.
+
+--> Sales reports
+--> trending analysis
+--> Business intelligence dahsboard
+
+Redshift : Offers OLAP on AWS. 
+
+Leader Node : Plan the query execution
+
+Compute Node : Stores the actual data.
+
+WLM : Workload management : AutoWLM
+WLM lets you create queues - Each and every queue gets a dedicated slice of memory and concurrency slots.
+
+AutoWLM : Redshift automatically manage the memory and concurrency
+Manual WLM : You have to define queues, memory and concurrency slots.
+
+Queury Queue - A holding lane for queries. 
+concurrency slots - How many queries can run simultaneously in a queue.
+Memory - How much cluster memory that queue gets.
+Short Query Acceleration (SQA) - Automaticallt fast track the shortqueries, so they dont wait behind big queries.
+
+
+================
+
+DMS : Database Migration Service
+
+1. RDS : Source Database  : schema with some info
+2. RDS : Target Database  : plan schema
+
+3. Create a DMS cluster.. THis act as a intermidiate component.. 
+
+4. Create Source endpoint and test connectivity to DMS
+
+5. Create Target endpoint and test connectivity to DMS
+
+6. Create a DMS task and configure to replicate the data.. 
+
+
+Full load : Replicate all existing data once.
+
+CDC : Change data capture : Ongoing replications
+
+Full load + cdc : Once all changes and then continue with replicating ongoing chnages.. 
+
+Homogeneous Migration : Same class source and target db migration (mysql --> mysql)
+Heterogeneous Migration : Diff class source and target db migration (db2 --> post, mongo --> postgre/mysql)
+--> For hetro, We need to use SCT (Schema convertion tool)
+
+=============
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

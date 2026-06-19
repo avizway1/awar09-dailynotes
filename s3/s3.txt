@@ -1,0 +1,58 @@
+
+
+S3 : Simple Storage Service : 
+
+--> We can store flat files. We cna store anything, Everything is an object. (.exe, .pdf, .docx, .abc)
+--> We need to create a bucket.
+
+bucket = directory with unique namespace
+
+Global Namespace : Bucket name should be unique across the globe
+Account Regional Namespace : name should be unique within our account, its automatically add suffix.
+
+Bucket Name:
+min : 3 char
+max: 63 char
+SHould not start with .
+should not end with .
+no ..
+should not resemble IP address format (192.168.100.1)
+
+--> we have unlimited storage in s3 platform.
+
+Min obj size : 0 bytes
+Max obj size : 50 TB (earlier its 5 TB)
+
+Standard URL:
+https://s3.<region-code>.amazonaws.com/<bucket-name>/<object-name>
+
+Virtual Path (We should not have . in the bucket name): 
+https://<bucket-name>.s3.<region-code>.amazonaws.com/objectname
+https://<bucket-name>.s3.amazonaws.com/objectname
+
+-------
+
+To make any object public, We have 3 levels of settings
+
+1. Account level block public access : OFF by default.. 
+2. Bucket level block public access : We need to turn off "block public" at bucket level..
+3. Object level settings : 
+
+We have 2 ways to make our object public
+1. Using ACLs - goto bucket permisions tab --> Object Ownership --> ACLs enabled and save 
+2. Using Bucket policy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
