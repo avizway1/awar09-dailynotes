@@ -2,7 +2,8 @@
 
 S3 : Simple Storage Service : 
 
---> We can store flat files. We cna store anything, Everything is an object. (.exe, .pdf, .docx, .abc)
+--> S3 is an Object based storage service
+--> We can store flat files. We can store anything, Everything is an object. (.exe, .pdf, .docx, .abc)
 --> We need to create a bucket.
 
 bucket = directory with unique namespace
@@ -41,6 +42,105 @@ To make any object public, We have 3 levels of settings
 We have 2 ways to make our object public
 1. Using ACLs - goto bucket permisions tab --> Object Ownership --> ACLs enabled and save 
 2. Using Bucket policy
+
+========================
+
+D: 22/06/2026
+
+S3 Pricing : 
+--> How many API calls happening on our data.?  (PUT / GET / UPDATE)
+--> How much data is traffering.?
+--> How much data you are storing in an s3 bucket. (gb/tb / days)
+--> What storage class you are using (standard/ IA / Glacier / IT)
+--> Depends on Storage class, How much data you are retriving.? 
+
+S3 Storage Classes : 
+--> How frequently you are accessing data.?
+--> Do you need data without delays.? or is it okay to wait for sometime to retrive the data.?
+
+S3 Standard : frequently accessed data (more than once in a month) with milliseconds latency/access.
+--> We can access data without any delays.
+--> Data spans across multiple AZs (>= 3 AZs)
+--> 99.99% Availability and 99.999999999% (11 9's) durability
+
+Standard-IA (Infrequently Accessed) : 
+--> We can access data without any delays.
+--> Store here if you access data infreq (once in a month) with missiseconds latency.
+--> Data spans across multiple AZs (>= 3 AZs)
+--> 99.99% Availability and 99.999999999% (11 9's) durability
+
+OneZone-IA : 
+--> We can access data without any delays.
+--> As data stores only in 1 AZ, Recommended to store easily reprodusable/recretable data.
+--> Store here if you access data infreq (once in a month) with missiseconds latency.
+--> Data stores only in 1 AZ
+--> 99.95% Availability and 99.999999999% (11 9's) durability
+
+Glacier Instant Retrival : 
+--> Long loved archieve data, but accessed once a querter with instant retrival in milliseconds.
+
+Glacier Flexible Retrival (Formerly Glacier):
+--> long lived archieval data, accessed once a year with retival time between 2 - 5 hrs.
+--> We cannot access data immediately.
+
+Glacier Deep Retrival:
+--> long lived archieval data, accessed less than once in a year with retival time between 12-24 hrs.
+--> We cannot access data immediately.
+
+Intelligent Tier : 
+--> Data with changing or unknown access patterns
+--> Its little contlier comapred to other storage classes.
+
+Glacier Storage : Perform data retrival.. 
+Bulk Retrival : Takes 5-12 hrs
+Standard Retrival : Takes approx 3-5 Hrs
+Expdited Retrival : Takes 1-5 min (Object size should not exceed 250 MB)
+
+======================
+
+Versioning : Hepls us to maintain multiple copies of our objects within a bucket.
+
+By defualt, versioning will be in suspended state,.
+
+After enabling versioning, all uploads will get a version id. 
+
+--> we can get object to current state, if any wrong data edits happens.
+--> If any objects deleted accidentally, we can get it back by deleting the "Delete marker".
+
+When you se "Show versions".. Whatever you delet, it deletes permenantly..
+
+Permanently delete : Object gone
+Delete : we can recover the object
+
+======================
+
+Life Cycle Management Rule / LCR : 
+
+helps to transit objects from one storage class to another storage class, then we can configure to make object expire/permanently delete.
+
+We can configure one rule for current version objects and another rule for previous versioned objects.
+
+
+storage classes 
+Versioning
+Life Cycle rule
+Replication
+Events
+Object lock
+Static Web Hosting
+Encryption - KMS
+Bucket policy
+
+cloudfront + ACM 
+
+
+
+
+
+
+
+
+
 
 
 
