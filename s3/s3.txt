@@ -121,13 +121,104 @@ helps to transit objects from one storage class to another storage class, then w
 We can configure one rule for current version objects and another rule for previous versioned objects.
 
 
+======================
+
+
+D: 23/06/2026
+
+Replication : 
+
+SRR : Same Region Replication : Source bucket and destination bucket should be in same region.
+
+CRR : Cross Region Replciation : Source bucket and destination buckets are in different region.
+
+--> Versioning must be enabled on source and destination bucket. 
+
+--> After enabling replication, whatever data you upload, only it replicates. 
+Existing data..??? 
+--> Use aws cli and use sync command to sync data manully
+--> Create a batch job and then replicate the data. (cost us) ***
+
+source : mumbai : ap-south-1
+Destination : singapore : ap-southeast-1
+
+aws s3 sync s3://target-bucket s3://source-bucket
+
+aws s3 sync s3://avinash-replica-655700896650-ap-southeast-1-an s3://avinash-655700896650-ap-south-1-an
+
+==============
+
+Event Notifications: We can invoke other service when something happens on our s3 bucket.
+
+Object uploaded --> Invoke a lambda function
+Object Deleted --> Triger an SQS Queue
+Object failed to replicate --> Trigger SNS notification
+
+* Try out the replication failure alert mechanism.
+
+==============
+
+Object lock : WORM Model (Write Once and Read Many) helps you to prevent object deletion. 
+
+We have 2 modes.. 
+1. Governance Mode : User who have valid IAM permissions can overerite or delete protected objects, during retention period.
+2. Compliance Mode : No user can overwrite or delete protected object versions during the retention period (Including the root user.)
+
+============
+
+S3 Default Performance : 
+
+3,500 PUT Objects Operations per second per prefix
+5,500 GET Object Operations per second per prefix
+
+--> use more prefixes for better performance.
+--> every prefix will give us 3,500 PUT and 5,500 GET operations.
+
+--> Add randomness to the object names for better search mechanism. (yr/month/date/app-timestamp)
+
+-----
+
+If i host a static website here in S3, By defualt, i get s3 performance for my website as well. 
+
+--> No need to run static website. (No Servers and No Public IP and No Network Configurations, Less operations)
+
+--> We can map a domain name, but You domain name and s3 bucket name should be same.
+--> We cannot map ssl/tls certificate. Use cloudfront for https / ssl mappings.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 storage classes 
 Versioning
 Life Cycle rule
+
 Replication
 Events
 Object lock
 Static Web Hosting
+
 Encryption - KMS
 Bucket policy
 
