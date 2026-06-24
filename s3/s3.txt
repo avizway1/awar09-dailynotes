@@ -39,7 +39,7 @@ To make any object public, We have 3 levels of settings
 2. Bucket level block public access : We need to turn off "block public" at bucket level..
 3. Object level settings : 
 
-We have 2 ways to make our object public
+We have 2 ways to make our objects public
 1. Using ACLs - goto bucket permisions tab --> Object Ownership --> ACLs enabled and save 
 2. Using Bucket policy
 
@@ -185,44 +185,136 @@ If i host a static website here in S3, By defualt, i get s3 performance for my w
 --> We can map a domain name, but You domain name and s3 bucket name should be same.
 --> We cannot map ssl/tls certificate. Use cloudfront for https / ssl mappings.
 
+================
+
+D: 24/06/2026
+
+
+Convert plain text into cypher text / scrambled text.
+
+
+In-Transit Encryption / At flight encryption :  When data is in trasit state, we cna encrypt the data. Its aws responsibiloity, aws adds ssl/tls certificate for web urls, so data will be encrypted automatically.
+
+Client side encryption / CSE : We can encypt data before uploading it to s3 platform, customer/we are responsible for this encryption method/type/decryption.
+
+Server Side encryption / SSE : When data is in S3 platform, We can apply encryption methods on our data/s3 bucket.
+
+
+1). Who Manages/generates the key material. 
+2). Who can decrypt it.
+
+
+SSE-S3 : Default encryption method for s3 data..
+--> S3 generates and manages the key material
+--> Whoeverhas has access to s3 platform, they can decrypt the data automatically.. No addl permisisons required to decrypt the data..
+--> Suitable for public sharable data.. 
+--> No Direct access to view/manage key material.. 
+
+---
+
+KMS : key management service : THis service helps to create, store, rotate anc control encryption keys. 
+
+SSE-KMS  DMK (Data Management key / Default Master key / Data Master key): 
+--> KMS generates and manages the key material. 
+--> Whoeverhas has access to s3 platform, they can decrypt the data automatically.. No addl permisisons required to decrypt the data..
+--> No Direct access to view/manage key material.. 
+--> We cannot make objects public. 
+--> This key generates automatically whenever we start using the service. 
+
+---
+
+SSE-KMS CMK (Customer Managed Key).. 
+
+--> Customer has to create the KMS Key.. KMS manages the key material. 
+--> Only s3 service access is not sufficient, User should have permissions on Key Usage as well, along with S3 service access..
+--> No Direct access to view/manage key material.. 
+--> We cannot make objects public. 
+--> We can rotate the key material., We generally configure key rotation for every 365 days.
+
+Step 1 : Choose the key type.
+
+Symmetric Key : A single key will be used for encryption and decryption purposes : S3 supports only Symmetric key.. 1 Shared key.. Extremly fast.. Bulk data and large files.. 
+
+Asymetric key : Just like connecting to ec2 instance using keypair (ec2 instance will have public key, we will have private key).. A public and private key used for encryption and decryption data. 
+
+
+Step 2 : Provide the alias name and description.
+
+Step 3 : Choose the key administrator.		: Avinash_T
+
+Step 4 : Choose the key users.				: Avinash_T
+
+Step 5 : Review and create the key.
+
+---
+
+SSE KMS-C (Customer Provided Key): 
+
+--> Customer has to create the KMS Key.. Customer has to Generate and upload the key material. 
+--> Only s3 service access is not sufficient, User should have permissions on Key Usage as well, along with S3 service access..
+--> User will have access to  view/manage/rotate key material.. 
+--> We cannot make objects public. 
+https://www.youtube.com/watch?v=r17Z75TqjU0&t=860s
 
 
 
+--> I want to access encryptes s3 data from an ec2 instance.? How can i access.!!! 
+Ans : Create an IAM role, Provide Key usage permissions to  IAM role. And attach it to ec2 instance. 
+
+===============
+
+Bucket Policy : 
+
+lets assume, We have an S3 bucket, that has sensitive information, One user has "s3 full access", he should not able to access/upload anything to a particular s3 bucket.
 
 
+1. Bucket ARN 	: arn:aws:s3:::avinash-encry-655700896650-ap-south-1-an/*
+2. Principal 	: user/group ARN : arn:aws:iam::655700896650:user/encrytest
+3. Effect 		: Allow / Deny : Deny
+4. Action 		: PutObject
+
+bucket level operation : bucketarn
+Object level operation : bucketarn/*
+
+https://awspolicygen.s3.amazonaws.com/policygen.html
 
 
+How to make a bucket public using bucket policy.
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": [
+                "arn:aws:s3:::avinash-encry-655700896650-ap-south-1-an/*",
+                "arn:aws:s3:::avinash-encry-655700896650-ap-south-1-an"
+            ]
+        }
+    ]
+}
+
+------------
+
+Transfer Acceleration : We can upload data to s3 bucket via edge/PoP Locations. 
+
+There is no guarantee that we get better speed if we enable this feature. We can perform speed comparision tool.
+
+https://s3-accelerate-speedtest.s3-accelerate.amazonaws.com/en/accelerate-speed-comparsion.html?region=ap-south-1&origBucketName=avizway
 
 
+------------
+
+Cross-origin resource sharing (CORS) : 
+
+https://youtu.be/YrfDLrSVxQ8?si=-uTPeYGZYhsUbvyR
+
+-----------
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-storage classes 
-Versioning
-Life Cycle rule
-
-Replication
-Events
-Object lock
-Static Web Hosting
-
-Encryption - KMS
-Bucket policy
-
-cloudfront + ACM 
 
 
 
