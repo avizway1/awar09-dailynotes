@@ -1,0 +1,43 @@
+
+
+WAF : Web Application Firewall : 
+
+This helps to protect our applications from commn web exploits. WAF is a web application firewall, this can monitor web requests sending to the AWS service resources i.e; Load Balancer / Cloudfront / APiGateway. Based on WebACLs, it will evaluate the traffic and take call (allow/deny).
+
+---
+
+Shield : Enabled by default in all the AWS accounts.. Free for all the acocunts.. 
+ 
+Shield Advanced : AWS allocated a dedicated DDoS Monitoring team.. 3000 USD per Month..
+
+DDoS : 
+1. Shield Advanced
+2. Cloudfront 
+3. WAF
+4. Auto Scaling Group
+
+---
+
+Trusted Advisor : This service wont fix anything.. It just gives advises : Based on our support plan, we get suggestions.. We get only limited suggestions if we ar ein basic support plan..
+
+Cost optimization : Over Provisoned
+Performance : Under Provisioned
+Security : SG, Public sharing
+Fault tolerance : Multi AZs
+Service limits : ANy service default lit is hitting (5 vpcs, 20 asg)
+Operational excellence : logs, encryptions.. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

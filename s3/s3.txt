@@ -314,18 +314,42 @@ https://youtu.be/YrfDLrSVxQ8?si=-uTPeYGZYhsUbvyR
 
 -----------
 
+D: 25/06/2026
 
 
+--> CDN Service providers : Cloudflair, Akamai, Cloudfront, Redhat
+
+CDN : Content Delivery Network
+
+Cloudfront Distribution:  We cna use AWS PoP Locations or edge locations to deliver the content to end customer. Across the world, we have 750+ edge location, Technically data stores near to end customer geographical location.
+
+Default TTL Value: 86400 Seconds / 24 hrs
+Min ttl - 0 live data via edge location
+Max ttl - 365 days
+
+What if i push wrong data and wrong data is already in edge locaiton.?
+Ans : Invalidation to clear cache from edge location
+
+GeoLocation Restrictions : Whitelist / blocklist
+
+Cloudfront has inbuild capability to protect resources from DDoS Attack
+
+We can use S3 Bucket, LB, Media services.. 
+
+EC2 Instance --> t3.small --> 100 Req/sec --> 10K R/Sec.? --> 100K Req/Sec.. 
+
+Do you want to map Domain Name.?? 
+Ans: yes, ACM Certificate must be created in "N Virginia"
 
 
+How cloudfroint can access data from s3 bucket.?
+Ans : Cloudfront creates OAI, This updates the s3 bucket policy to getObject. 
 
 
+d1ogw1xz1t5mv4.cloudfront.net
+awswithavinashreddy.com/video1.mp4
 
-
-
-
-
-
+awswithavinashreddy.com/video1.mp4
 
 
 
