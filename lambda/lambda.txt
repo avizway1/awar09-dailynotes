@@ -1,0 +1,112 @@
+
+
+EC2 : OS Patching, Instance Scaling operations i.e; LB, ASG.. 
+--> Long running applications.. Unlimited execution time..
+--> We need to pay for instance hours.. 
+
+Lambda : Fully managed serveless service provided by AWS.. You no need to pay for hoursly basis.. 
+--> You pay for the code runtime duration.. How much resources consumed to run the code.. 
+--> Lambda is more suitable for short lived and event driven tasks.. Lambda has a max execution timeout of 15 min..
+
+Lambda has preconfigured runtime environments..
+--> .net 10
+--> Java
+--> nodejs
+--> Python
+--> Ruby
+--> Amazon Linux 2023
+
+1. Durable Execution : This is designed for long running worklofs, Falult tolerance executions and resumable tasks..
+--> Lambda has a max execution timeout of 15 min..and if job not completed in 15 min, it will stop execution, we need to restart the process.. 
+--> Maximum Execution timeout for Durable execution lambda function is : 366 days.
+
+
+2. EC2 Capacity Provider : Generally Lambda function runs in AWS managed infrastructure.. With this option we can run lambda fucntion inside an ec2 instance.. 
+
+Lambda_handler : THis is the entry point to the lambda function. 
+
+---
+
+Lambda supports 3 Invocation Models:
+
+Synchronous Invocation: The caller send a request for response, lambda runs the function and retrun the result directly to the caller. If the lmabda fucntion fails, The caller should retry, lambda wont retry automatically.
+--> API Gateway, Lamnbda function, ALB..
+
+Asynchronous Invocation: The caller sends a request for response, lamdba responds with 202 status code.. Lambda rus the function and retur the result to the caller. If the lambda function fails, it is going to send the event to DLQ (Dead Letter Queue). Also, it retries 2 times.
+--> SQS, SNS, EventBridge
+
+Event Source Mapping : Lambda polls the source for meessages/records and invokes the lambda when it finds any records / batc of records.. 
+--> Apache kafka, Kenins Data streams, SQS..
+
+
+----
+
+Lets understand lambda pricing:
+
+
+Duration: 1.66 ms	
+Init Duration: 107.01 ms
+
+Billed duration = Init Duration + code run Duration (round off to near number)
+Billed Duration: 109 ms			--> $
+Max Memory Used: 40 MB			--> $
+
+---
+
+Lambda function has 3 life cycle phases:
+
+1. INIT Phase : Initilisation Phase : Download the code, Initilize the runtime env and then it runs the code
+2. INVOKE Phase : It executes the handler function. THis is actual phase where our code or business logics runs.. 
+3. SHUTDOWN Phase : After a priod of time, It goes inactive, IN Backend AWS Destroy the environment and free the resources..
+
+
+cold start : INIT + INVOKE : First invoke after a long time will take high latency.. ex: using a car after long time takes time to start the engine..
+
+Warm Start : INVOKE Phase :  Subsequent invocations / Freq invocations keeps the env alive.. Low latency.. Ex: using a cart daily, makes the start quicker.. 
+
+How can you reduse the cold start period time/duration..?? 
+--> Provisioned cuncurrancy
+--> SnapStart **
+
+
+Lambda SnapStart : Resumes frozen VM snapshots from a fast cache.
+Provisioned Concurrency : Keeps a specified number of environments constantly warm.
+
+---
+
+Lambda limitations: 
+
+--> max timeout: 15 Mn (overcome this limit using: durabkle execution)
+--> Deployment package size : 50 MB (Directly upload) / 250 MB via s3 bucket Uplaod
+--> Cuncurrent executions: 1000 per region
+--> Layers: 5 layes with 250 MB max size
+
+--> Every lambda function invocation stores the logs in Cloudwatch logs group.
+
+---
+
+lambda fucntion has timeout value, Defualt timeout for most fot he function is 3/10 Seconds.. 
+
+max Memory : 10240 MB / 10 GB
+
+--> Can we run a lambda function inside a vpc to access DB / Instances with private IPs / Private subnet resources.?
+Ans: yes.. lambda role should have "AWSLambdaVPCAccessExecutionRole"..
+
+---
+
+Can i connect to Mysql RDS DB from a lambda fucntion
+Ans: yes, But we need lambda layers.. 
+
+if we want to use some libraries across multipke lambda fucntion i.e;NumPy, pandas/ SDK .. 
+
+
+
+
+
+
+
+
+
+
+
+
