@@ -28,6 +28,79 @@ Service limits : ANy service default lit is hitting (5 vpcs, 20 asg)
 Operational excellence : logs, encryptions.. 
 
 
+===============
+
+D: 02/07/2026
+
+Cloudtrail : Contineously generate logs on our aws accounts. 
+
+--> Enabled by default, It can store last 90 ays logs. 
+--> Send all the logs to an s3 bucket / CLoudwatch logs and Enable retention period. (S3 is lot cheaper storage)
+--> Configure S3 life cycle rule and setup retention period i.e; 7 yr / 10 yrs based on Org requirements.
+--> Cloudtrail supports multi AWS accounts, We can store all the logs into a central account designed for storing the orhgabisational logs. 
+--> We canot track EC2 instance OS level activities. (Depends on CW Agent)
+--> We have option to filter logs using Username, s3 objects/ lambda..
+
+
+4 types of log teails:
+
+1. Management trail : Designed for AWS console level operations (instance launch / rds create / delete)..
+2. Data Trail : S3, Lambda and dynamodb : Enable dta logs for current and future buckets..
+3. Insight Events : Helps us to identify the unusaual activities, errors or user bahaviours.. 
+4. Network Trails : Network flow events.. 
+
+
+----
+
+Amazon Config : This service helps to Track resource history, enforcing security guardrails, automate compliance audits. Config track all resource chnages and flag resources as non-compliant if ots not following the rules we configure. 
+
+PCI DSS : Payment Card Industry Data Security Standard
+HIPAA	: Health insurance probability and accountability act
+SOC2 	: Service Organisation COntrol 2
+CIS		: Center for Internet Security
+GDPR	: General Data Protection regulations
+ISO 27001 : International Organization for Standardization
+
+
+created a config rule to verify ec2 instance launch type, If user selected not allowed instance type, treat that resource as non-compliant resource. Provide Rule content (Rule content must follow the Guard custom policy syntax for the Guard runtime - guard-2.x.x)
+
+----
+
+Amazon SQS : Simple Queue Service : 
+
+1. Standard
+2. FIFO : 
+
+
+Standard : At-least-once delivery, message ordering isn't preserved
+--> At-least once delivery
+--> Best-effort ordering
+
+FIFO : First-in-first-out delivery, message ordering is preserved
+--> First-in-first-out delivery
+--> Exactly-once processing
+
+DLQ / Dead-letter Queue : A dedicated Queue designed to store undelivered messages 
+
+Max Message retention period : 14 Days
+
+--> Decoupling microservices required this SQS service
+--> for traffic smoothing and ratelimiting
+
+SQS 
+
+Poll : The consumer actively asks the provider for new data at regular intervals.
+Push : The provider automatically sends data to the consumer exactly moment it become available.
+
+----
+
+
+
+
+
+
+
+
 
 
 
