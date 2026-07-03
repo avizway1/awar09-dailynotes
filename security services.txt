@@ -37,7 +37,7 @@ Cloudtrail : Contineously generate logs on our aws accounts.
 --> Enabled by default, It can store last 90 ays logs. 
 --> Send all the logs to an s3 bucket / CLoudwatch logs and Enable retention period. (S3 is lot cheaper storage)
 --> Configure S3 life cycle rule and setup retention period i.e; 7 yr / 10 yrs based on Org requirements.
---> Cloudtrail supports multi AWS accounts, We can store all the logs into a central account designed for storing the orhgabisational logs. 
+--> Cloudtrail supports multi AWS accounts, We can store all the logs into a central account designed for storing the orgabisational logs. 
 --> We canot track EC2 instance OS level activities. (Depends on CW Agent)
 --> We have option to filter logs using Username, s3 objects/ lambda..
 

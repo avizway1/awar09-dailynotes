@@ -1,0 +1,63 @@
+
+
+** DO NOT ENABLE THIS IN YOUR FREE AWS ACCOUNTS.  YOU ACCOUNT AUTOMATICALLY UPGRADES TO PAID PLAN FROM FREE PLAN.
+
+1. If you have 10 AWS acocunts, how you will manage Bill payments.?
+2. How can we have central permissions management.? 
+3. How can we manage users authentication, across all these accounts.!!
+
+It is not recommended to run any workload in "Management Account".
+
+1. AWS Management account gets the central billing
+2. We can apply SCP (Service Control Polocies) for permissions enforcement.
+3. Integrate AWS Organisations with IAM Identity center for Central logging and user management.
+
+Sandbox / Training		: POC ? Proof of concepts
+Dev						: Development
+SQA						: Quality Assiurance
+UAT						: User Acceptance Testing (pre-Prod)
+PRod					: Live Env / Entire world 
+Central Networking		: Transit Gateway / Endpoints / Share subnets
+Central Logging			: Central logs of all our aws accounts
+Management Account		: Where AWS Organisation feature is enabled. 
+
+*The management account can't be changed after creating an organization. 
+
+OU : Organisational Unit : Group of Accounts, which has similar characterestics.. 
+
+SCP : Service Control Policies.. 
+
+
+{
+    "Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "DenyEverythingonS3",
+			"Effect": "Deny",
+			"Action": [
+				"s3:*"
+			],
+			"Resource": [
+				"*"
+			]
+		}
+	]
+}
+
+
+-----
+
+https://aviz7.awsapps.com/start
+
+
+
+
+
+
+
+
+
+
+
+
+
