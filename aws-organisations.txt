@@ -47,7 +47,6 @@ SCP : Service Control Policies..
 
 -----
 
-https://aviz7.awsapps.com/start
 
 
 

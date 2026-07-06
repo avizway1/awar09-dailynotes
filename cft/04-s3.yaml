@@ -1,0 +1,15 @@
+Parameters:
+  BucketName:
+    Type: String
+    Description: Enter the bucket name you want to create
+
+Resources: 
+  MyFirstS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+
+Outputs: 
+  MyFirstS3BucketName:
+    Description: THis bucket created now
+    Value: !Ref MyFirstS3Bucket

@@ -1,0 +1,49 @@
+
+D: 06/07/2026
+
+IaC : Infrastructure as Code : 
+
+CLickOps : performing Operations using browser.. 
+IaC : Write code to create resources.. 
+
+Cloudformation supports 2 Prog languages
+1. JSON : Java script object notation : We need to takes care about the {}, , 
+2. YAML : Indentation is matters here
+
+Install an IDE (Visual Studio, Cursor, Kiro)
+--> Install plugins/extensions (Aws toolkit, yaml, github copilot and amazon q)
+
+YAML Is combination of key and value pairs.
+
+IaC has major advantage: Reusability of the template.
+
+--
+
+CFT will 3 things primarily
+
+1. Resources : THis is mandatory, You can define what resources, you want to create. **Mandatory
+2. Output : Pick info of the created resource and display
+3. Parameters : Instead hardcode values, you can parameterise required info. 
+
+ARN : Amazon resource Name.. Resource format.. 
+
+https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-template-resource-type-ref.html
+
+service-provider::service-name::data-type-name
+
+AWS::S3::Bucket
+AWS::EC2::Instance
+
+----
+
+To Deploy cft, we can upload to s3 and provide s3 url / perform direct upload from laptop / sync from git.
+
+
+aws cloudformation create-stack --stack-name myteststack --template-body file://sampletemplate.json 
+
+
+CLi deploy with parameters: 
+
+aws cloudformation create-stack --stack-name myteststack --template-body file://sampletemplate.json --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
+
+

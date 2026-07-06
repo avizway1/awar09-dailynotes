@@ -1,0 +1,80 @@
+#Simple YAML file
+fruit: apple
+color: red
+origin: Kashmir
+
+---
+
+#List format of fruits
+fruits:
+  - apple
+  - mango
+  - kiwi
+  - banana
+
+---
+
+#Flow style with above fruits
+fruits: [ apple, banana, cherry, kiwi ]
+
+---
+
+#Data Types in CFT
+
+fruit: apple    #String
+price: 15       #Number
+in_stock: true  #Boolean
+
+---
+
+#Collections
+
+fruits:
+  - apple
+  - mango
+  - kiwi
+  - banana
+apple:
+  color: red
+  price: 15
+  in_stock: true
+mango: 
+  color: yello
+  price: 50
+  in_stock: false
+
+---
+
+#Nested format
+
+fruits_details:
+  apple:
+    color: red
+    price: 15
+    in_stock: true
+  mango: 
+    color: yello
+    price: 50
+    in_stock: false
+fruits_origin: {apple: kashmir, mango: india, banana: africa}
+
+---
+
+#Reference Mechanism
+# fruits:
+#   bestfruit: mango
+#   healthyfruit: apple
+#   citrusfruit: orange
+
+# Avinash'sBasket:
+#   FirstChoice: !Ref bestfruit
+#   SecondChoice: !Ref citrusfruit
+#   ThirdChoice: !Ref healthyfruit
+# David'sBasket:
+#   FirstChoice: apple
+#   SecondChoice: !ref citrusfruit
+#   ThirdChoice: !Ref bestfruit
+# AnudeepBasket:
+#   FirstChoice: !ref citrusfruit
+#   SecondChoice: !Ref healthyfruit
+#   ThirdChoice: !Ref bestfruit

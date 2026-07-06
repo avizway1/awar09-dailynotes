@@ -1,0 +1,24 @@
+Parameters:
+  AvailabilityZone:
+    Type: String
+    Description: Choose required AZ for instance
+    Default: ap-south-1a
+
+  InstanceType:
+    Type: String
+    Description: Choose required instance type
+    Default: t3.micro
+
+Resources:
+  MyFirstEc2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0d351f1b760a30161
+      AvailabilityZone: !Ref AvailabilityZone
+      KeyName: awar10-lnx-kp
+      InstanceType: !Ref InstanceType
+
+Outputs:
+  MyEc2ID:
+    Description: The instance id we launched
+    Value: !Ref MyFirstEc2Instance
