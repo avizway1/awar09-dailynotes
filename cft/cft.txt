@@ -1,4 +1,3 @@
-
 D: 06/07/2026
 
 IaC : Infrastructure as Code : 
@@ -46,4 +45,21 @@ CLi deploy with parameters:
 
 aws cloudformation create-stack --stack-name myteststack --template-body file://sampletemplate.json --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
 
+===============
 
+D: 07/07/2026
+
+Data Block: Data block helps to pick existing resources
+
+DependsOn: condition helps to create resources in ordered manner. Ec2 instance required SG.. so, Add DependsOn at Instance resource block level. 
+So that first SG creation complete, then only ec2 creation will start. 
+
+DriftDetection : We can identify any changes happened manually on the resources, out of cloudformation.
+
+mapping: 
+dev : t3.micro
+uat : t3.small
+prd : c7i-flex.large
+
+Can we retain resource, even if cloudformation template is deleted.? 
+Ans: yes, Add DeletionPolicy: Retain attribute under the logical ID of the resource.

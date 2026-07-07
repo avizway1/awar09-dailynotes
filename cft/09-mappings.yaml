@@ -1,0 +1,75 @@
+Parameters:
+
+  Environment:
+    Type: String
+    Description: Choose the environment
+    Default: dev
+    AllowedValues:
+      - dev
+      - uat
+      - prd
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
+  AvailabilityZone:
+    Type: String
+    Description: Choose required AZ for instance
+    Default: ap-south-1a
+    AllowedValues:
+      - ap-south-1a
+  
+  Keypair:
+    Type: String
+    Description: Choose the keypair
+    Default: awar10-lnx-kp
+
+Mappings:
+  EnvToInstanceType:
+    dev:
+      InstanceType: t3.micro
+    uat:
+      InstanceType: t3.small
+    prd:
+      InstanceType: c7i-flex.large
+
+Resources:
+
+  MySG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group via CFT
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  MyProdEc2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn: MySG
+    Properties:
+      ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+      AvailabilityZone: !Ref AvailabilityZone
+      KeyName: !Ref Keypair
+      InstanceType: !FindInMap [EnvToInstanceType, !Ref Environment, InstanceType]
+      SecurityGroupIds: 
+        - !Ref MySG
+      Tags:
+        - Key: Name
+          Value: !Sub "mapping-demo-${Environment}"
+
+Outputs:
+  MyEc2ID:
+    Description: The instance id we launched
+    Value: !Ref MyProdEc2Instance

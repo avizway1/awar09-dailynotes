@@ -1,0 +1,62 @@
+Parameters:
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+
+  AvailabilityZone:
+    Type: String
+    Description: Choose required AZ for instance
+    Default: ap-south-1a
+    AllowedValues:
+      - ap-south-1a
+
+  InstanceType:
+    Type: String
+    Description: Choose required instance type
+    Default: t3.small
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - c7i-flex.large
+      - m7i-flex.large
+
+Resources:
+
+  MySG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group via CFT
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  MyProdEc2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn: MySG
+    Properties:
+      ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+      AvailabilityZone: !Ref AvailabilityZone
+      KeyName: awar10-lnx-kp
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds: 
+        - !Ref MySG
+      Tags:
+        - Key: Name
+          Value: Dynamic-block-demo
+
+Outputs:
+  MyEc2ID:
+    Description: The instance id we launched
+    Value: !Ref MyProdEc2Instance
