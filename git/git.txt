@@ -1,0 +1,79 @@
+
+
+Git is a version control system — a tool that records snapshots of your project over time so you can review history, undo mistakes, and collaborate without overwriting each other's work.
+
+1973 - 	SCCM - Source code control system 	- 1 file
+		RCS - Revision control system		- x files, 1 Directory
+		CVS - Cuncurrent version system		- x files, x directories, 1 user
+
+2000	SVN - Subversion					- x files, x dire, x users
+2005	GIT Global Information Tracker		- Advantages i.el branching, cherry pick
+
+---
+
+https://git-scm.com/			--> Download and install git in your laptop. 
+
+git config --list			--> Verify the configuration
+git config --global user.name "avinash"
+git config --global user.email "avizway@avizacademy.com"
+git config --global core.editor "vim"
+git config --global --edit
+
+.git directory contains
+
+files:
+config : repo specific confis i.e; remote URLs and branch tracking
+description : used by gitweb to display desc. Not applicable for latest git.
+HEAD : Point to the current checkout-out branch or specific commit hash. 
+index : The staging area where git prepares the content for our next commit.
+
+Dir: 
+objects/	: directory structures, compressed file contents (blobs), commit history and tags.
+refs/		: Stores pointers to commits.
+hooks/		: cotnains customizable scripts that git runs automatically before or after commit / push.
+info/		: addl global files
+logs/		: keeps the history of changes made to references.
+
+
+git add .			--> Add the current path files to staging area
+
+git rm --cached styless.html		--> When the file is in staging, you wan to unstage it. 
+
+
+git add .
+git commit -m "added my code"
+
+git log
+git log --oneline
+
+git config --global init.defaultBranch <name>
+
+git branch -M main										--> Rename the branch
+
+git push --set-upstream origin main
+
+===========
+
+ssh authentication method: 
+
+ssh-keygen -t ed25519 -C "avinash@avizacademy.com"
+
+/home/ec2-user/.ssh/id_ed25519
+
+
+eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_ed25519
+
+ssh -T git@github.com
+
+
+
+
+
+
+
+
+
+
+
