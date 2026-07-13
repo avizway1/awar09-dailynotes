@@ -67,6 +67,133 @@ ssh-add ~/.ssh/id_ed25519
 
 ssh -T git@github.com
 
+==========================
+
+D: 13/07/2026
+
+
+git clone git@github.com:avizway1/awar09-gitdemo.git
+
+
+
+.gitignore				=====> This helps not to commit sensitive info files / wantedly ignore system files.. 
+
+
+First create the .gitignore, then add the file types.. then commit it.. Then after, you can test
+
+#Never send secrets to git
+.env
+*.pem
+*.key
+credentials
+
+#Ignore dependencies and virtual env
+node_modules
+.venv
+
+#Ignore terrafarm state file, as it contains sensitive info i.e; accid..
+*.tfstate
+
+# Ignore build artifacts
+*.zip
+*.jar
+
+#OS junk
+.DS_Store
+Thumbs.db
+
+-----
+
+git clone			--> This command helps to clone an existing repo to our local environment. 
+
+git log --oneline
+
+git diff <commitid-1>..<commitid-2>
+
+git diff 9b968ce..99405db
+
+---
+
+git pull 			--> THis will get the latest changes from central repo to local repo.
+
+---
+
+Branching : Branching helps us to create a seperate line of development for features, bug fixes or experimental changes ---> Without touching our main codebase.
+
+git branch			--> tells us in which branch we are.
+
+
+TBD : Trunk Based Development : its a git branching strategy, we directly dont work on Main/master branches, We always create a seperate branch based on the code change purposes.. Once the feature is fully implemnted and tested, We merge this branch into main branch, then we can delete this branch. 
+
+
+git branch feature-x			--> THis creates a branch with name "feature-x"
+
+git checkout feature-x			--> switch to branch (Traditional command)
+git switch feature-x			--> switch to branch (Modern command)
+
+
+git switch -c feature-y			--> Creates the branch and switches automatically
+git checkout -b feature-y		--> Creates the branch and switches automatically
+
+
+1. switch to main branch, then perform the merge.. 
+git merge feature-x
+git merge feature-y
+
+ls		--> shows all the files along with main branch files. 
+
+---
+
+You and your friend, both are writing a book, this book has 10 chapters.. You 5 chapters and your frind 5 chapters.. 
+
+git merge : Bringing all chapters together.. : Very safe for shared repos.. 
+
+you and your friend writing a book
+you wrote 3 chapters - at sametime
+your friend write 2 chapters - at sametime
+you both decided to combine now.
+--> If we use merge, It shows as you wrote 3 chapters and your friend wrote 2 chapters.
+--> It keeps all original commit hashes exactly the same. 
+
+git rebase : this will rewrite all the changes " Dangerous for shared repos"
+you wrote 3 chapters
+your friend write 2 chapters - at sametime
+you both decided to combine now.
+--> if we use rebase, it shows as you arote 3 chapters first, then your frined wrote 2 chapters for clean and lenear history.. 
+
+=========
+
+rebase lab: 
+
+
+echo "C1" > main.txt && git add . && git commit -m "C1"
+echo "C2" >> main.txt && git add . && git commit -m "C2"
+echo "C3" >> main.txt && git add . && git commit -m "C3"
+
+git checkout -b feature HEAD~1
+
+
+echo "D" > feature.txt && git add . && git commit -m "D Feature commit"
+echo "E" > feature.txt && git add . && git commit -m "E Feature commit"
+
+git rebase main
+
+git log --oneline --graph --all
+
+
+Goldenrule / Thumb rule : never rebase a branch that has been pushed to a shared/public repo.
+
+Rebase changes the commit hashes, it destroys teammenbers base hisory, It can multiply the duplicate commits. 
+
+Local-only branches: rebase as much as you want to, as this cleans up the history before anyone else can see it..
+Central/Shared Repo: always use git merge.. Even use git pull to get the team mebers work, before pushing your changes..
+
+
+
+
+
+
+
 
 
 
