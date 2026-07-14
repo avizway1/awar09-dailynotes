@@ -189,6 +189,71 @@ Local-only branches: rebase as much as you want to, as this cleans up the histor
 Central/Shared Repo: always use git merge.. Even use git pull to get the team mebers work, before pushing your changes..
 
 
+==================
+
+D: 14/07/2026
+
+
+git stash
+
+stash refers to storing or hiding something away in a safe, secret place, usually for future use
+
+Lets assume you are working on some features, this feature development is unfinished, but your team meber asked you to switch to another branch to fix a critical bug. 
+
+--> You cant commit now, as your changes are unfinished, but you dont want to loss the changes. 
+
+git stash							--> It wil stash the current changes
+git stash push -m "message"			--> it stashes the changes with msg
+git stash list						--> list all stashed changes
+git stash apply						--> apply the changes
+git stash pop						--> apply and delete
+git stash show -p					--> Shows the stashed content
+
+---
+
+
+echo "C1 - feature 1 Setup" >> C1.txt
+git add . && git commit -m "Comming C1 feature"
+
+echo "C2 - feature 2 Setup" >> C2.txt
+git add . && git commit -m "Comming C2 feature"
+
+echo "C3 - feature 3 Setup" >> C3.txt
+git add . && git commit -m "Comming C3 feature"
+
+
+6080e94 (HEAD -> feature) Comming C3 feature
+ea376e8 Commiting C2 feature
+277679b Commiting C1 feature
+
+cf02639 (main) Commit B - DB Setup
+92ebc2d Commit A - Base Setup
+
+git cherry-pick ea376e8
+
+===============
+
+TBD : Trunk Based Development : its a git branching strategy, we directly dont work on Main/master branches, We always create a seperate branch based on the code change purposes.. Once the feature is fully implemnted and tested, We merge this branch into main branch, then we can delete this branch. 
+
+--> We push the branch we worked on to implement the feature / fixes the bug, We create PR (pull Request).. If the PR approves, then it merges with the main branch code.. 
+
+
+You have seen a public repo and you identified a mistake/improvement, you decided to contribute to it.?
+--> DO the changes on your branch and crate a PR, if approved, you will be part of controbutor. 
+
+
+PR / Pull Request
+
+Fork 
+
+---
+
+Host static application from github.. 
+--> vercel : 
+--> AWS Amplify : 
+--> Netlify
+
+
 
 
 
