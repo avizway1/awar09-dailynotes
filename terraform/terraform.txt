@@ -1,0 +1,78 @@
+
+
+IaC : Infra as Code: 
+
+Cloudformation :  Supports JSON and YAML : It is limited to only AWS.. 
+Terraform : Cloud Agnostic : AWS, Azure, GCP, Git.. 
+
+Configuration Management tools not designed for Infra management. We can effectiveky install, manage or uninstall softwares inside an OS.. 
+
+Terraform created by Mitchell Hashimoto, 2014
+Terraform written in GO Language. 
+Originally developed by Hashicorp and now maintained/acquired by IBM.
+
+---
+
+http://developer.hashicorp.com/terraform/install
+
+windows: Download and unzip, then move/create the "terraform" folder to C:/ drive.
+then place terraform.exe file, then copy the path and add it as system variable. 
+
+mycomputer --> rightclick --> properties --> environment variables --> "edit sys variables --> add path --> reopen the command prompt and verify (terraform --version)
+
+--> We should have AWS CLI installed and configured in our laptop to access aws via terraform. 
+
+
+1. terraform init
+
+--> It preapres our working folder for tf usage by downloading the provider plugin automatically.
+--> This need to run one-time only for the initial project setup 
+
+Resource Block: We can define what need to create in AWS account by using the tf code. 
+
+Resource block contians 3 components..
+
+resource-type		: aws_instance	(has to be same as defined in tf documentation)
+Name for block 		: webserver / dbserver	(you can give anything, but no duplications with in the project)
+Arguments			: ami id, instance type, security group..
+
+*Better install terraform plugin in visual studio code.
+
+----
+
+terraform fmt				--> Run this as first thing to get proper allignment.
+terraform validate			--> helps to identify syntax and config errors in tf file.
+
+terraform plan 				--> Its a dryrun, tells us what happens if we apply this code. 
+terraform apply				--> Create the resources in AWS env. 
+
+terraform apply	--auto-approve		--> Non interactive apply. wont ask for confirmation. 
+
+terraform destroy			--> Deletes the resources from our environment. 
+
+terraform destroy --auto-approve
+
+i	--> init
+p	--> plan
+a	--> apply
+d	--> destroy
+
+
+terraform statefile : THis act as "SOURCE OF TRUTH", THis tracks all our resources created and managed by tf code. This contians current state of the infra.
+
+* Never edit the statefile manually. 
+
+------
+
+terraform output
+
+terraform output -json
+
+we can pass "sensitive = true " to not to display info. you can use -json to read the values.
+
+
+
+
+
+
+
