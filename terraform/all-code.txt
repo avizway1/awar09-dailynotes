@@ -1,0 +1,203 @@
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "webserver" {
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.small"
+
+  tags = {
+    Name = "WebServer"
+  }
+}
+
+resource "aws_s3_bucket" "myfirstbucket" {
+  bucket = "aviz-terraform-bucket-15072026"
+}
+
+output "instance_id" {
+  description = "The ID of the webserver instance"
+  value       = aws_instance.webserver.id
+}
+
+output "instance_public_ip" {
+  description = "The public IP address of the webserver instance"
+  value       = aws_instance.webserver.public_ip
+  sensitive   = true
+}
+
+output "mys3bucket_name" {
+  description = "The name of the S3 bucket"
+  value       = aws_s3_bucket.myfirstbucket.id
+}
+
+================================================
+
+count meta argument example
+
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "webserver" {
+  count         = 2
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.small"
+
+  tags = {
+    Name = "WebServer-${count.index + 1}"
+  }
+}
+
+-----
+
+for-each with locals
+----
+
+provider "aws" {
+  region = "ap-south-1"
+}
+
+locals {
+  servers = {
+    dev  = "t3.micro"
+    uat  = "t3.small"
+    prod = "c7i-flex.large"
+  }
+}
+
+resource "aws_instance" "webserver" {
+  for_each      = local.servers
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = each.value
+
+  tags = {
+    Name = "WebServer-${each.key}-server"
+  }
+}
+
+---
+for-each with toset example
+----
+
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "webserver" {
+  for_each      = toset(["dev", "uat", "prd"])
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = t3.micro
+
+  tags = {
+    Name = "WebServer-${each.key}-server"
+  }
+}
+
+============
+depends-on
+-----------
+
+
+provider "aws" {
+  region = "ap-south-1"
+}
+
+
+resource "aws_instance" "webserver" {
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = "WebServer-server"
+  }
+}
+
+resource "aws_s3_bucket" "myfirstbucket" {
+  bucket = "aviz-terraform-bucket-15072026"
+  depends_on = [aws_instance.webserver]
+}
+
+------
+
+provider to created resources in multiple accounts at a time.. 
+
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+
+provider "aws" {
+  region = "us-east-1"
+  alias = "virginia"
+  profile = "aviz7"
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.micro"
+  tags = {
+    Name = "mumbai-WebServer-server"
+  }
+}
+
+resource "aws_instance" "NV-webserver" {
+  provider     = aws.virginia
+  ami           = "ami-01edba92f9036f76e"
+  instance_type = "t3.micro"
+  tags = {
+    Name = "nvirginia-WebServer-server"
+  }
+}
+
+============
+
+create before destroy
+
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.micro"
+  tags = {
+    Name = "mumbai-WebServer-server"
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+--------
+
+#Ignore changes meta argument
+
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami           = "ami-0b910d1016287a5e7"
+  instance_type = "t3.micro"
+  tags = {
+    Name = "mumbai-WebServer"
+  }
+  lifecycle {
+    ignore_changes = [instance_type, ami, tags]
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

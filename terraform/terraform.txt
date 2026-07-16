@@ -70,6 +70,42 @@ terraform output -json
 
 we can pass "sensitive = true " to not to display info. you can use -json to read the values.
 
+=================
+
+D: 16/07/2026
+
+META-ARGUMENTS: 
+
+
+count
+for_each
+depends_on
+
+default resource creation count is 10. 
+terraform apply -parallelism=5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
