@@ -84,6 +84,112 @@ depends_on
 default resource creation count is 10. 
 terraform apply -parallelism=5
 
+===============
+
+D: 17/07/2026
+
+
+Requirement: Launch an ec2 instance and SSH into it and execute commands inside the instance. 
+
+in tf, we have 3 types of provisioners
+1. file : file("/Users/avizway/Desktop/keypairs/awar10-lnx-kp.pem")
+2. local-exec: picks files and execute commands locally
+3. remote-exec : COnnect to remote machine using ssh and then execute commands
+
+
+
+If you destroy and recrate any block resource, you cna use "-replace" option. Earlier its "-taint"
+
+1. tf destroys existing resource
+2. tf creates a brand new resource with same config.
+3. statefile will be updated with new resource details. 
+
+terraform plan -replace="aws_instance.mumbai-webserver"
+terraform apply -replace="aws_instance.mumbai-webserver"
+
+i-069313a7f915d4602		--> current instance id.
+
+----
+
+If any changes happened outside of the terraform, We can identify, We call it as "drift detection"..
+
+1. Just Detect			: terraform plan -refresh-only
+2. Accept the drift		: terraform apply -refresh-only (when someone made valid change - update statefile)
+3. Revert the drift		: terraform apply				(our code is truth - undo the manual change)
+
+----
+
+Terraform logs
+
+ERROR	: Errors only
+WARN	: Warning + Error
+INFO	: General operatinal info + Warning + error
+DEBUG	: Api calls + General operatinal info + Warning + error
+TRACE	: Everything - Every API call, response, Decision + General operatinal info + Warning + error
+
+
+export TF_LOG=DEBUG
+export TF_LOG=INFO
+export TF_LOG=WARN
+
+unset TF_LOG
+
+export TF_LOG_PATH="tflogs.log"
+
+============
+
+Statefile Management
+
+===========
+
+terraform state list
+
+terraform state list									--> Shows all resources tracked by tf
+terraform state show aws_instance.mumbai-webserver		--> Shows detailed info about the tf tracked block
+
+* Never store tfstate file in project location
+* Do not commit/store in github, as it contains lot of sensitive info.
+
+
+backend : where the tfstate file is stored.
+
+local backend: Statefile stores in our local laptop, but in other location.
+--> Works only for us
+--> No collabarations with other team members.
+--> No locking feature.
+
+terraform {
+  backend "local" {
+    path = "/Users/avizway/Desktop/Batch 9/tflocal/terraform.tfstate"
+  }
+}
+
+we need to migrate the statefile using below command
+
+terraform init -migrate-state
+
+---
+
+We always store the "tfstate file" inside an "S3 bucket".
+1. Enable versioning on s3 bucket.
+2. Enable s3 bucket object lock with "compliance mode", So no one can delete the file, Even if the root user try to delete, if fails till the retention day, we configure.
+
+
+terraform {
+  backend "s3" {
+    bucket = "aviz.tf.state.myproject"
+	key = "projectx/terraform.tfstate"
+	region = "ap-south-1"
+	use_lockfile = true
+  }
+}
+
+
+*Rare cases, we do this
+terraform force-unlock <lockid>
+terraform force-unlock 99e30c7d-7c06-416a-f75f-1e18c6a05aea
+
+
 
 
 

@@ -191,12 +191,105 @@ resource "aws_instance" "mumbai-webserver" {
 }
 
 
+=================
+
+remote-exec for installaing commands
+
+================
+
+provider "aws" {
+  region  = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami                    = "ami-0b910d1016287a5e7"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = ["sg-0f1b92a14f30712ee"]
+  key_name               = "awar10-lnx-kp"
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("/Users/avizway/Desktop/keypairs/awar10-lnx-kp.pem")
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum update -y",
+      "sudo yum install -y httpd",
+      "sudo systemctl enable --now httpd",
+      "echo '<h1>Welcome to TF Web Server</h1>' | sudo tee /var/www/html/index.html"
+    ]
+  }
 
 
+  tags = {
+    Name = "mumbai-WebServer"
+  }
+}
 
 
+==============
+
+executing commands using ec2 userdata
+
+=============
+
+provider "aws" {
+  region  = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami                    = "ami-0b910d1016287a5e7"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = ["sg-0f1b92a14f30712ee"]
+  key_name               = "awar10-lnx-kp"
+  user_data              = file("${path.module}/userdata.txt")
+
+  tags = {
+    Name = "mumbai-WebServer"
+  }
+}
+
+================
+
+remote s3 backend
+
+===============
+
+provider "aws" {
+  region  = "ap-south-1"
+  profile = "default"
+}
+
+terraform {
+  backend "s3" {
+    bucket       = "aviz.tf.state.myproject"
+    key          = "projectx/terraform.tfstate"
+    region       = "ap-south-1"
+    use_lockfile = true
+  }
+}
+
+resource "aws_instance" "mumbai-webserver" {
+  ami                    = "ami-0b910d1016287a5e7"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = ["sg-0f1b92a14f30712ee"]
+  key_name               = "awar10-lnx-kp"
+  tags = {
+    Name = "mumbai-WebServer"
+  }
+}
+
+resource "aws_s3_bucket" "myfirstbucket" {
+  bucket = "aviz-terraform-bucket-15072026"
+}
 
 
+=========
 
 
 
