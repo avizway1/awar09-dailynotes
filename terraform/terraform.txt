@@ -189,21 +189,39 @@ terraform {
 terraform force-unlock <lockid>
 terraform force-unlock 99e30c7d-7c06-416a-f75f-1e18c6a05aea
 
+==============
+
+D: 20/07/2026
+
+terraform init			--> Initilise the tf provider, and downlaods the provider automatically.
+
+this reads the provider block and downloads the "plugin" based on providwer you configure.
+THis stores under .terraform/ directory.
 
 
+Constraint
+
+= 6.54.0			Exactly this version only		version = "= 6.54.0"
+>= 6.54				THis version or higher			version = ">= 6.54.0"
+<= 6.0				THis version or lower
+~> 5.0				5.x only.. not 6.x not 4.x
+~>5.47				5.47 and above.. not 6.x
+>= 5.0, <6.0		between 5.0 and 6.0
+
+terraform init -upgrade				--> Run this command to upgrade the version.
 
 
+==> if you want to have multiple providers, use meta-argument examples, we discussed earlier. 
 
 
+==============
 
-
-
-
-
-
-
-
-
+string 		: t3.micro			: a single text value
+number		: 3					: a numeric value
+bool		: true / false		: true or false only
+list		: ["t3.micro","t3.small"]	: odered collection of same type values
+map			: { env = "dev", name = "webserver"}
+tuple		: ["dev", 30, true]
 
 
 
