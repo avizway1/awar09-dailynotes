@@ -223,6 +223,76 @@ list		: ["t3.micro","t3.small"]	: odered collection of same type values
 map			: { env = "dev", name = "webserver"}
 tuple		: ["dev", 30, true]
 
+map(string)
+
+======================================================
+
+We have 4 ways to supply varibales in tf
+
+
+
+1. CLI flag			--> terraform apply -var="instance_type=t3.small"
+2. .tfvars file		--> terraform apply -var-file="dev.tfvars"
+3. Enavironment var --> export TF_VAR_Instance_type="c4.xlarge"
+4. defualt value	--> Defined inside varibale block
+
+terraform apply -var-file="dev.tfvars"
+terraform apply -var-file="uat.tfvars"
+
+------
+
+whenever we are managing infra for multiple environments i.e; dev, uat, prd.. its not recommended to have same tfstate for all envs.. 
+
+We can use workspace.. Every workspace will have its own tfstate file.. 
+
+dev/		--> terraform.tfstate
+uat/		--> terraform.tfstate
+
+
+terraform workspace list
+
+terraform workspace new dev
+terraform workspace new uat
+terraform workspace new prd
+
+terraform workspace list					--> shows all workspaces
+
+terraform workspace select dev				--> switch to specific workspace
+terraform workspace select uat
+
+
+================================
+
+terraform import
+
+We have 2 options to import exiosting resources and we cna continue tracking it..
+
+cli import method: 
+
+grab the instance 'ami_id" and "instance_type" and prepare the reosurce block.
+
+terraform import aws_instance.existing_instance i-0398013b5a3452617
+
+terraform import aws_security_group.existing-sg sg-044222d272618f002
+
+---
+
+import {
+    to = aws_instance.existing_instance
+    id = "i-0398013b5a3452617"
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
