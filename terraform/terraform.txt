@@ -286,13 +286,45 @@ import {
 
 
 
+===========================
+
+modules:
+
+A Module is a reusable, packaged terraform configuration.
+
+root module : the main directory where you run terraform apply.
+child module : A module called by the root module.
+public module : a module from the terraform registry.
+
+provider block always should be in root module only. 
+run "terraform init" whever you add a new module.
+each child and root module require "variables.tf" file, even if you have not setting default values.
+
+===============
+
+terraform has some builtin function.. 
+
+you can use "terraform console" to test this..
+
+upper()
+lower()
+repalce()
+toset()
+merge()
+concat()
+jsonencode()
+file()
+min()
+max()
 
 
+Task 1 : Create an IAM user and attach an existing policy (s3fullaccess) to the created user.
 
+Task 2 : Create an RDS with mysql, enable snapshots for 1 day retention period. Enable termination protection on RDS.
 
+Task 3 : write a end to end terraform code to create an s3 bucket, Make sure it as not public.. Then create a cloudfront distribution and add s3 bucket as origin.
 
-
-
+Task 4 : Create a VPC with your defined CIDR ranges and subnets.. Launch an ec2 instance inside this VPC's public subnet. use AWS userdata and deliver the webpage. (or) try the remote-exec to install commands and deliver the webpage.
 
 
 
