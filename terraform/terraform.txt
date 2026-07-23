@@ -326,6 +326,55 @@ Task 3 : write a end to end terraform code to create an s3 bucket, Make sure it 
 
 Task 4 : Create a VPC with your defined CIDR ranges and subnets.. Launch an ec2 instance inside this VPC's public subnet. use AWS userdata and deliver the webpage. (or) try the remote-exec to install commands and deliver the webpage.
 
+=========================
+
+D: 23/07/2026
+
+HCP terraform its a hosted platform to run terraform. 
+
+app.terraform.io
+
+instead of running "terraform apply" from our laptop, we can do changes in our local repo, when we push the changes to remote repo.. terraform can pick the changes and apply it.
+
+HCP terraform
+--> Stores the statefile in hcp cloud.
+--> credentails picks from variables / OIDC providers.
+--> When a run is happening, new run will be in queue.
+--> every run will be logged.
+--> We can add approval step befor applying the changes.
+
+HCP gives us 500 Managed resources.
+--> Supports remote state storage
+--> remote execution.
+
+
+terraform state pull
+
+
+AWS Organisations
+SCP : service control policy : in HCP terraform, we have sentinal polocies.. 
+
+Free plan support only 1 policy.. 
+
+sentinel is HCP's Policy as Code framework..  
+
+Treat is as rule before applying changes to infra.. 
+
+PASS --> teraform apply runs
+FAIL --> apply will be Blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,15 @@
+
+
+Monolithic Architecture : Binds all software components together into a single, unified codebase. 
+--> All or Nothing.. As it deployed as one single unit.
+--> We choose one programing language and we develop the entire application.
+--> Most of the cases, we need to scale the entire application.
+--> Single centralised database for entire application.
+
+
+Microservices Architecture: THis breaks the application into a collection of smaller, independent servcies that communicate over a network.
+--> Each service is completely independent.
+--> We can choose required programing languages per module. (frontend --> python, cart --> java, rating --> postgre, user management --> mysql) ==> polyglot.
+--> we can scale services independently.. (more servers --> frontend, less servers --> cart)
+
+Amazon : frontned, recommendation, cart, reviews, ratings, payment, address storage..
