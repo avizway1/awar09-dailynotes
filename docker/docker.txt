@@ -13,3 +13,79 @@ Microservices Architecture: THis breaks the application into a collection of sma
 --> we can scale services independently.. (more servers --> frontend, less servers --> cart)
 
 Amazon : frontned, recommendation, cart, reviews, ratings, payment, address storage..
+
+==================
+
+D: 24/07/2026
+
+Physical Server : Full Isolation, One OS per Server, Minutes to boot, Less portability, hard for scalability.. 
+Resource UsageL 10-15% Usage.. 1 app per server.. 
+
+VM / Virtual Machiene : Full Seperate OS per VM.. Multiple VMs one server.. 30 sec - 1 min boot time.. 60-80% resource utilisation.. 10-20 VMs per Server - 10-20 apps.. 
+
+Containers : Process level isolation.. Shared kernel.. MBs in Size.. 1-5 Seconds to Boot.. 90%+ utilisation.. 
+100s of containers per server.. Very high portability.. 
+
+
+It works on my machiene --> is eliminated with containers. 
+Fast setup 
+Dependency isolation..
+
+
+2008 --> dotCloud solomon hykes.. 
+2013 --> Opencourced it as Docker.. v0.1 released. 
+2015 --> OCI (Open container Initiative) is formed to setup Industry standards for containers. 
+
+podman
+containerd
+CRI-O
+
+
+sudo dnf install docker -y
+
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+sudo chmod -aG docker $USER
+newgrp docker
+
+docker images				--> Shows the images available to run
+docker ps					--> Shows the running containers
+docker ps -a				--> all containers including stopped / killed
+
+docker pull nginx			--> Pull nginx latest image from docker hub to local laptop
+
+docker run nginx			--> basic Run. Run in Foregound
+
+docker run -d nginx			--> run docker in detached mode
+
+docker rm <container-id> / <container-name>		--> Remove the cotnainer
+
+docker rmi <image-name> / <repo name>			--> Remove the image
+
+docker run mysql				--> As image not availbale, it pulled the image and failed when running. required env variables missing. 
+
+
+docker run -d --name mysql-aviz -e MYSQL_ROOT_PASSWORD=s3cret8899 mysql:8.4
+
+docker run -d --name mysql-env --env-file ./mysqlenv.txt mysql
+
+mysqlenv.txt
+MYSQL_ROOT_PASSWORD=s3cret8899
+
+
+docker stop mysql-env			--> sends the SIGTERM (graceful) signal
+docker kill	mysql-env			--> sends SIGKILL signal
+
+docker pause <container-id>
+docker unpause <container-id>
+
+
+
+
+
+
+
+
+
+
