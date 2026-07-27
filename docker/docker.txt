@@ -55,6 +55,11 @@ docker ps -a				--> all containers including stopped / killed
 
 docker pull nginx			--> Pull nginx latest image from docker hub to local laptop
 
+docker search nginx
+docker search nginx --limit 5
+docker search --filter is-official=true nginx
+
+
 docker run nginx			--> basic Run. Run in Foregound
 
 docker run -d nginx			--> run docker in detached mode
@@ -79,6 +84,139 @@ docker kill	mysql-env			--> sends SIGKILL signal
 
 docker pause <container-id>
 docker unpause <container-id>
+
+===============================================
+
+D: 27/07/2026
+
+
+docker inspect <container-id/name>
+
+docker stats
+
+TO restrict container's CPU and Memory: 
+
+docker run -d --name mynginx --memory=128m --cpus=0.25 nginx
+
+--memory=256m
+--memory=512m
+--cpus=1
+--cpus=0.25
+
+docker inspect --format='{{.HostConfig.Memory}}' mynginx
+docker inspect --format='{{.HostConfig.NanoCpus}}' mynginx
+
+------------
+
+Port Mapping: We can map a host port to container and we can deliver output to outside world.
+
+Make sure to open Host defined ports at Instance SG.
+
+docker run -d -p <host-post>:<container-port> nginx
+
+docker run -d --name mynginx1 -p 80:80 nginx
+
+docker run -d --name mynginx2 -p 8080:80 nginx
+
+docker run -d --name mynginx3 -p 8888:80 nginx
+
+ss -tulnp		==> To verify port status
+
+======================
+
+Restart polocies : We can control what happens when a container stops or the host reboots.
+
+docker run -d --restart=always --name mynginx5 -p 80:80
+
+
+always				: Always restart, Including on host reboot
+unless-stopped		: Similar to always, but not if manually stopped.
+no					: Never restart
+
+---------------------
+
+docker logs <container-id>/<container-name>		--> Shows the logs
+
+docker logs -f <container-id>					--> *Shows the logs in realtime / live logs. 
+
+docker logs --tail 10 <container-id>			--> Most recent 10 logs
+
+docker events								--> Stream live events
+
+docker top <container-id>					--> Shows the processes inside a container.
+
+---------------------
+
+copy files from/to container.
+
+
+docker cp <container-name/id>:/usr/share/nginx/html/index.html ./		--> Copy from container to local
+
+docker cp ./index.html <container-name/id>:/usr/share/nginx/html/index.html		--> copy to container from local
+
+docker diff <container-name/id>					--> THis shows the file system changes
+
+----------------
+
+Scenario: We have image in instance-1, THe same image, we need it in instance-2. But, instance 2 dont have internet to get it from dockerhub..???
+
+docker save -o mynginxshare.tar nginx:latest			==> THis creates a tar/zip of image. We can copy/port anywhere
+
+docker load -i mynginxshare.tar						--> Import tar as a image
+
+---------------
+
+docker networking: 
+
+docker network ls				--> THis lists all the networks
+
+bridge : default network.. All containers get their own virtual network.. 
+host : container shares the host machiene network directly..
+None : No network at all
+
+
+docker network create myisolatednw
+
+docker run -dit --name mynginx --network myisolatednw nginx
+
+docker run -dit --name c1 --network myisolatednw alpine
+docker run -dit --name c2 --network myisolatednw alpine
+
+
+Bridge Mode: 
+--> Bridge mode will have its own IPs inside the docker network.
+--> It required port mapping (-p 80:80 (or) -p 8888:80)
+--> THis is more isolated and secured
+--> Works on Linux, MacOs, Windows
+--> This mode has a NAT component, that helps to resolve container's IP. One additional HOP involved in traffic flow. 
+--> best for Enterprise grade / Multi COntianer applications.
+
+HOST Mode : 
+--> Share host's IP and Port.
+--> Port mappinf not required.
+--> Less isolated compared to bridge, as it uses host network.
+--> Works only in Linux OS.
+--> Slightly faster comapred to bridge, as no NAT involved.
+--> We can use this for System level tools i.e; monitoring agents.
+
+-----------
+
+docker container prune				--> Clear all the stopped containers
+
+docker image prune					--> Clears dangling images (untagged images)
+docker image prune -a				--> Clears all unused images.
+
+docker network prune				--> Clears unused network
+docker volume prune					--> clears unused volumes
+
+docker system prune -a				--> Removes unused images, containers, nw
+docker system prune --volumes
+
+docker rm -f $(docker ps -aq)		--> Use with caution** It will stop and remove all running and stopped containers
+
+
+
+
 
 
 
