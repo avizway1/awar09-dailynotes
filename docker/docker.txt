@@ -215,6 +215,218 @@ docker system prune --volumes
 docker rm -f $(docker ps -aq)		--> Use with caution** It will stop and remove all running and stopped containers
 
 
+====================================
+
+D: 28/07/2026
+
+
+docker volume path: /var/lib/docker/volumes
+
+docker volume ls					--> List the volumes
+
+docker volume create my_data		--> Create a volumes
+
+docker volume inspect my_data
+
+==> mount point of volume: /var/lib/docker/volumes/my_data/_data
+
+
+Named Volume: Create a volume first and use it. 
+Ananymous VOlume : Create avolume while creating a container, Random id generates.
+
+Named VOlume:
+docker run -d --name mysqldb -v my_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=s3cret8899 mysql:latest
+
+Ananymous VOlume:
+docker run -d --name mysqldb1 -v /var/lib/mysql -e MYSQL_ROOT_PASSWORD=s3cret8899 mysql:latest
+
+----
+
+Bind Mount : we can have files in our host machiene/laptop, We can mount it to Container. 
+
+docker run -d --name nginx1 -p 80:80 -v /home/ec2-user/webcontent:/usr/share/nginx/html nginx:latest
+docker run -d --name nginx2 -p 8080:80 -v /home/ec2-user/webcontent:/usr/share/nginx/html nginx:latest
+docker run -d --name nginx3 -p 8888:80 -v /home/ec2-user/webcontent:/usr/share/nginx/html nginx:latest
+
+Read only Bind Mount: When someone connect to container and try to modify, it wont allow.. 
+docker run -d --name nginx3 -p 8888:80 -v /home/ec2-user/webcontent:/usr/share/nginx/html:ro,z nginx:latest
+
+---
+
+Another way to map a volume to a cotnainer.. 
+
+docker run -d -p 80:80 --mount source=my_data,target=/var/lib/mysql,readonly mysql:latest
+
+
+
+==========================
+
+FROM		: Sets the "base image". THis must be the first instruction in Dockerfile.
+
+FROM alpine
+FROM ubuntu:latest
+FROM node:24
+FROM python:3.13.14-trixie
+FROM amazonlinux
+
+----
+
+RUN			: Executes the commands during the image build process.
+
+RUN dnf update && dnf install nginx -y
+
+* Best practice is to have less layers, so combine multiple commands into single layer.
+
+----
+
+WORKDIR		: Sets the working directory for all subsequent commands. (RUN, COPY)
+
+WORKDIR /app
+WORKDIR /usr/share/nginx/html
+
+----
+
+COPY : COpies the files or directories from host to container.
+
+COPY . .
+COPY src/ /app
+
+COPY <source-path> <container-path>
+
+----
+
+ADD : similar to copy, but it supports "zip files". Comonly we use COPY over ADD option.
+
+ADD mydata.tar.gz /app
+ADD mydata.tar.gz .
+
+---
+
+
+CMD : sets the default command to run when the container starts. CMD gets ovverwridden if you pass arguments while you are executing "docker run" command.
+
+CMD ["nginx", "-g","daemon off;"]
+
+
+FROM amazonlinux:latest
+CMD["echo","hello from AVINASH"]		--> We build and image name is "mytest"
+
+NOT PASSING ANY ARGUMENT: 
+docker run mytest		--> OUTPUT: "hello from AVINASH"
+
+
+PASSING AN ARGUMENT WHILE RUNNING:
+
+docker run mytest date						--> OUTPUT date/"Jul 28 2026"
+docker run mytest "Hello from ANUDEEP"		--> OUTPUT: Hello from ANUDEEP 
+
+---
+
+ENTRYPOINT: Defines a command that always runs using ENTRYPOINT, Even if you pass any arguments when running "docker run".
+
+ENTRYPOINT["echo","hello from AVINASH"]
+
+
+FROM amazonlinux:latest
+ENTRYPOINT["echo","hello from AVINASH"]		--> We build and image name is "mytest"
+
+NOT PASSING ANY ARGUMENT: 
+docker run mytest		--> OUTPUT: "hello from AVINASH"
+
+
+PASSING AN ARGUMENT WHILE RUNNING:
+
+docker run mytest date						--> OUTPUT: hello from AVINASH date
+docker run mytest "Hello from ANUDEEP"		--> OUTPUT: hello from AVINASH Hello from ANUDEEP
+
+--> IF We want we can combine both
+
+
+FROM python:3.12
+ENTRYPOINT["python"]
+CMD["app.py"]					--> We build this and got an image with "python-demo"
+
+docker run python-demo			--> python app.py	
+docker run python-demo db.py	--> python db.py	
+
+
+------
+
+EXPOSE 	: Document whoch port container is listening on. (THis Does not actually publish the port, We still need -p when running our containers)
+
+EXPOSE 80
+EXPOSE 5000
+EXPOSE 3000
+
+-----
+
+USER	: sets the user for running the container. It is highly recommend to run as "non-root" user.
+
+
+----
+
+ENV		: Sets the environment varaibles.
+
+ENV APP_ENV=prod
+ENV NAME=mydemoapp
+
+----
+
+VOLUME	: Create a mount point for shared data or persistent data.
+
+VOLUME /var/lib/mysql
+
+----
+
+LABEL		: Adds metadata to the image (version, description, maintainer)
+
+LABEL maintener="avizway@gmail.com" version="1.1"
+
+----
+
+SHELL 		: changes the default shell used.
+
+SHELL ["/bin/bash"]
+
+ARG			: Define arguments during the build process, not at runtime.
+
+HEALTHCHECK	: Inform docker to verify the container health, to identify, container is still running or not.
+
+STOPSIGNAL
+
+==============================
+
+.dockerignore
+
+node_modules
+npm-debug.log
+.git
+.env
+
+
+
+
+FROM node:22
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 3000
+
+CMD["node","server.js"]
+
+
+================
+
+
+docker build -t docker-exam .
+
+
 
 
 
