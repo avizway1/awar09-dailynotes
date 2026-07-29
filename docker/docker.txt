@@ -427,8 +427,100 @@ CMD["node","server.js"]
 docker build -t docker-exam .
 
 
+================
+
+D: 29/07/2026
+
+Microservices (Go, Rust): Under 50 MB.
+Web Apps (Node, Python): 100 MB – 400 MB.
+Heavy Frameworks (Java, AI/ML): 500 MB – 1 GB+.
 
 
+Multistage: 
+
+docker build -t docker-exam:multi .
+
+
+docker login
+
+
+docker tag docker-exam:multi avizway/docker-exam:multi
+
+docker push avizway/docker-exam:multi
+
+docker buildx build --platform linux/amd64,linux/arm64 -t avizway/docker-exam:multios --push .
+
+docker buildx build --platform linux/amd64,linux/arm64 -t avizway/docker-exam:multios --push .
+
+docker buildx build --platform linux/amd64,linux/arm64 -t docker-exam:multios .
+
+
+docker pull avizway/docker-exam:multios
+
+
+=============
+
+ECR: similar service as DockerHub. But its AWS Native container registry service.. 
+
+--> Create a repo in ECR
+
+--> login to ECR Repo : 
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 655700896650.dkr.ecr.ap-south-1.amazonaws.com
+
+--> If image not build, build it
+
+--> Add required tags to the local image
+
+docker tag avizway/docker-exam:multios 655700896650.dkr.ecr.ap-south-1.amazonaws.com/docker-exam:multios
+
+--> push the image to ECR
+
+docker push 655700896650.dkr.ecr.ap-south-1.amazonaws.com/docker-exam:multios
+
+
+==========
+
+Docker compose helps to run multiple containers at a time using single YAML file. 
+
+sudo mkdir -p /usr/libexec/docker/cli-plugins
+
+sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
+
+sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+
+
+docker compose version
+docker compose up 
+docker compose up -d
+docker compose logs
+docker compose restart
+
+
+==========================
+
+services:
+  db: 
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: avinash
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes: 
+      - pgdata:/var/lib/postgresql/
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  
+========================
 
 
 
