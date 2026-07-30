@@ -1,0 +1,87 @@
+
+
+Orchestrator: 
+K8s -> Kubernetes
+ECS --> Elastic Container Service
+
+--> High Availability and Self healing
+--> Elastic Auto Scaling
+
+I need 5 copies of my application.. 
+Manual Container management : We need to create copies manually, if anything is down. 
+With Orchestrator : it automatically moves to healthy state, by creating new copies.
+
+Manual Management is hard to manage the traffic. 
+With Orchestrator : it automatically provisns new containers.
+
+==================
+
+ECS : Elastic Container Service : 
+
+AWS Fargate : Serverless compute provider.. Pay per vCPU/Memory per seconds.. Host not required so NO OS customisations.. you don't think about creating or managing servers. Great for most common workloads.
+
+EC2 Launch Type : We manage ec2 instances, Our containers runs inside the ec2 instances.. Pay for the ec2 instance running hours.. Slow to scale application.. 
+	--> managed instances: Amazon ECS will manage patching and scaling on your behalf while giving you configurability about the types of instances. Great for more advanced workloads.
+	--> Self-managed instances : you must ensure the instances are patched and scaled properly, and you have full control over the instances.
+
+ECS Anywhere : We can use our own hardware.. We can use ECS to orchestrate our workload.. 
+
+
+--> Container Insights with enhanced observability : Provides detailed health and performance metrics at task and container level in addition to aggregated metrics at cluster and service level. Enables easier drill downs for faster problem isolation and troubleshooting.
+
+Container Insights : Provides aggregated metrics at cluster and service level. You can run deep dive analysis with logs insights analytics.
+
+
+Docker = Container
+ECS = Task
+K8s = Pod
+
+
+We wan to crate a task / container.. How much CPU you give, How much memory.. Where is your Image.? Access to any other servcies.?
+
+Ans : Task definition : This contains required settings for our task... 
+
+----
+
+Task Definition:
+
+Name: 
+Launch type: fargate
+Task Size : CPU and Memory for one container
+
+Task role : If our container required to access any AWS services, We can add it here..
+Task Execution Role : ecsTaskExecutionRole : Basic/Essential permissions to run the container and pulling th eimage from ECR.. 
+
+Container details: 
+	Name: 
+	Essential container: True : if container dies, It kills the task. 
+	Imae URI: Pick from ECR (Use Digest / SHA ID)
+	
+Storage: 
+--> By default, all containers gets the Ephemeral storage.. Size: 20 GB.. it will be available till container is live. 
+
+----------
+
+Turn on ECS Exec : Use ECS Exec to run interactive commands in containers running on EC2, Fargate or Managed Instances. 
+--> This feature requires a task role with appropriate permissions. (ssmmessages)
+--> Can only be enabled when launching new tasks, not for existing ones.
+--> make sure to add these policy to the ECS task role.
+
+-----------
+
+ECS CLuster : 
+Task Definition : 
+Task.!! 
+
+
+Task : Task is an individual copy of our appliation, If task stops, it wont create automatically. 
+service : Combination of tasks that deliver same application.. Also, We can integrate with ELB & ASG.
+
+
+
+
+
+
+
+
+
