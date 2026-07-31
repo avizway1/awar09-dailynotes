@@ -77,6 +77,45 @@ Task.!!
 Task : Task is an individual copy of our appliation, If task stops, it wont create automatically. 
 service : Combination of tasks that deliver same application.. Also, We can integrate with ELB & ASG.
 
+===============================
+
+D: 31/07/2026
+
+1. Create 3 SG in CustomVPC 
+
+1. ELB Sg : Deliver application via Load Balancer								: sg-06dc40b0720cf44e1
+2. Task SG : Use this with ECS tasks.. It need to deliver content to ELB-SG		: sg-0c1d0dde1ffbea7d5
+3. EFS SG : Use with EFS service.. it need to deliver content to TASK-SG		: sg-09b370b3b1448be66
+
+---
+
+2. Create an EFS and Create an Access Point.
+
+3. Update the Task Definition with EFS as storage. 
+	--> Under volumes, add a volume, choose "EFS --> access point --> adv settings --> enable "transit Encry"
+	
+---
+
+If our workload/tasks are in Private subnet.. To Pull the image from ECR, To store temp layers on s3, To write logs on CW logs, We need VPC Endpoints..
+
+ECR DKR Endpoint (Docker Registry)
+ECR API Endpoint (For Authentication)
+Logs (CLoudwatch) ENdpoint
+S3 Gateway Endpoint (Image layers)
+
+--> Endpoints need Security Group.. Open https to entireVPC, and use with Endpoints.. 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
