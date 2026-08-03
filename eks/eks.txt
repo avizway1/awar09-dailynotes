@@ -1,0 +1,100 @@
+
+Kubernetes : K8s : 
+
+Google built for its internal systems : Project initial name is BORG.. Renamed it to OMEGA to scale their massive infrastructure.. 
+
+In 2014, Goolgle handed it it CNCF as an Open Source Project, and named it as K8s..
+
+CNCF : Cloud Native Computing Foundation : 
+	--> Graduated
+	--> Incubated
+
+K8s Architecture : 
+
+1. Control Plane : Brain of K8s
+2. Data Plane : Hands of K8s
+
+
+1. CONTROL PLANE COMPONENTS
+
+1.1 kube-apiserver / API Server:
+--> This is the front door of K8s. This is the only point of contact to the couster for us.
+--> If you want to deploy a new workload, you run "kubectl apply" and talk to api to create workload.
+--> It validated the confoiguration first (pod, deployment, service)
+
+1.2 etcd:
+--> etcd contains all the information about the k8s cluster and workload.
+--> Data stores as key-value pairs (tags)
+--> Treat it as k8s Database
+--> it stores current and desired state of the cluster.
+--> if etcd is gone, the cluster state is lost.
+
+1.3 kube-scheduler: 
+--> kube-scheduler looks for availbale worker node to run our workload based on node's resources (i.e; cpu / memory).
+--> This wont run the pod, it will picks the best node to run our workload. 
+
+1.4 kube-controller-manager: 
+--> Act as Supervisor, This monitors the ETCD and ensure our appliation's current state matches the desired state.
+--> If we ask for 3 replicas, and only 2 are running... Then this send instructions to scheduler to pick a node and then it creates a replica.
+--> This runs background loops to etcd and make sure desired state and actual state matches.
+
+1.5 Cloud Controller Manager:
+--> Connects the k8s to the cloud resources for utilising resources i.e; LB, Roles, VPC..
+
+
+2. DATA PLANE / WORKER NODE : 
+
+2.1 kubelet : 
+--> Kubelet is an AGENT runs in every worker node.
+--> It listens to the control plane and ensure that the containers described in the pod specifications are running and healthy.?
+--> If container goes down, the kubelet restart it locally, automatically.
+
+2.2 Kubeproxy:
+--> This is a networking component, that runs on Every Node. 
+--> This assigns IPs to every pod created on Worker nodes.
+--> Its network proxy that runs on each node. THis handles network communications inside and outside of our cluster, THis ensures traffic reaches the right contianer.
+
+2.3 Container Runtime: 
+--> Responsible for pulling images and running containers.
+--> K8s uses cri-o and containerd as runtime. (it used to support docker earlier)
+--> kubelet asks container runtime to pull the image and start the container inside the pod. 
+
+
+pod : Its the smaller deployable unit in K8s. A pod is a wrapper around Container. 
+Generally one pod cotnains one Container. Pod is not limited to one container.
+
+A pod can cotnains multiple containers also.. (second container called as sidecar cotnainer)
+
+=================
+
+EKS : Elastic Kubernetes Service : This is AWS fully managed k8s service.
+AWS takes care about the CONTROL PLANE Components.
+For HA, FT of CONTROL PLANE, AWS Maintains multiple Copies across 3 AZs (almost 6 copies).. 
+We dont have access to Control plane nodes. AWS manages these. 
+
+Amazon EC2 Self-managed Node Group : We must ensure the instances are patched and scaled properly, and we have full control over the instances.
+--> We need to handle the scaling, OS Updates and security patches.
+--> AWS uses bottlerocket ami / al2023 ami. We need to configure these instances.
+
+* Amazon EC2 managed node group: Amazon ECS will manage patching and scaling on your behalf while giving you configurability about the types of instances. Great for more advanced workloads.
+--> AWS automatically provision, configure and manage ec2 instances for worker nodes.
+--> We need to handle the scaling.
+--> We have to choose right sized ec2 instances.
+
+EKS Auto Mode : AWS automatically pickls the required compute resources.
+
+AWS Fargate : serveless, No nodes to manage.. Can directly deploy pods.
+
+======================
+
+
+
+
+
+
+
+
+
+
+
+
