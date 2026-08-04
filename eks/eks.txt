@@ -73,6 +73,7 @@ For HA, FT of CONTROL PLANE, AWS Maintains multiple Copies across 3 AZs (almost 
 We dont have access to Control plane nodes. AWS manages these. 
 
 Amazon EC2 Self-managed Node Group : We must ensure the instances are patched and scaled properly, and we have full control over the instances.
+--> We manually need to provision, configurae and manage ec2 instances as worker nodes.
 --> We need to handle the scaling, OS Updates and security patches.
 --> AWS uses bottlerocket ami / al2023 ami. We need to configure these instances.
 
@@ -86,6 +87,154 @@ EKS Auto Mode : AWS automatically pickls the required compute resources.
 AWS Fargate : serveless, No nodes to manage.. Can directly deploy pods.
 
 ======================
+
+D: 04/08/2026
+
+
+1. AWS CLI Tools must be installed and configured. (https://aws.amazon.com/cli/)
+2. Install kubectl in your laptop. (https://kubernetes.io/docs/tasks/tools/)
+3. Install eksctl : https://docs.aws.amazon.com/eks/latest/eksctl/installation.html
+
+
+EKS has 2 types of support option
+standard support: 0.10$/Hour
+Extended Support: 0.50$/Hour
+
+
+eksctl create cluster --name ekswithavinash --version 1.35 --region ap-south-1 --zones=ap-south-1a,ap-south-1b --nodegroup-name mycustomng --nodes 2 --node-type c7i-flex.large --node-ami-family=AmazonLinux2023 --managed
+
+--nodes-min 2 --nodes-max 4 --full-ecr-access --external-dns-access
+
+============
+
+imperative Approach :  relies entirely on executing direct commands in our terminal. Fast to create/change/manage resources. Hard to track / manage. 
+
+---
+
+Declarative Approach : Writing a manifest file that act as a blueprint. We can apply and it does the job. 
+
+
+============
+
+eksctl create cluster -f cluster.yaml
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ekswithavinash
+  region: ap-south-1
+  version: "1.35"
+
+availabilityZones:
+  - ap-south-1a
+  - ap-south-1b
+
+managedNodeGroups:
+  - name: mycustomng
+    instanceType: c7i-flex.large
+    desiredCapacity: 2
+    amiFamily: AmazonLinux2023
+
+
+==========
+
+
+oidc : openID Conect : Its an open identity authentication protocol build on top of the OAuth 2.0 framework.
+
+Enable OIDC provider: This oidc helps to connect aws user/components to eks components i.e; service accounts.
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash --approve
+
+
+========
+
+
+eksctl autoimatically updates the kubectl with currently created custers context/info. 
+
+kubeconfig file locates in user's home directory: 
+~/.kube/config
+
+c:/users/administrator/.kube/config (windows)
+
+--> To update your eks config in new device..
+
+aws eks update-kubeconfig --region ap-south-1 --name ekswithavinash
+
+
+kubectl get nodes			--> list the worker nodes
+kubectl get pods
+
+==========================
+
+apiVersion: v1 (Core group)
+Supported components: pods, service, namespace, configmaps and secrets.
+Most of the k8s fundamental objects do not requie group name in their manifest files. 
+
+apiVersion: apps/v1 (Named Group)
+Supported components: Deployments, Daemonsets, replicasets
+
+meta-data: data about the data.. Data related to pod.. name of pod.. label you want to add to pod.. 
+
+
+pod : Its the smaller deployable unit in K8s. A pod is a wrapper around Container. 
+Generally one pod cotnains one Container. Pod is not limited to one container.
+
+
+spec: specifications - We need to define desired state and behaviour of the pod.
+1. containers list
+2. port numbers
+3. volumes
+4. resource limits
+
+kubectl get pods
+
+kubectl apply -f 01-pod.yaml --dry-run=server		--> dryrun
+
+kubectl apply -f 01-pod.yaml
+
+kubectl describe pod myfirstpod
+
+kubectl get pods -o wide							--> Shows IP address and node info
+
+kubectl logs myfirstpod
+
+kubectl logs -f myfirstpod
+
+kubectl delete pod myfirstpod
+
+kubectl logs myfirstpod --previous					--> Shows logs from crashed pods
+kubectl logs myfirstpod -p
+
+kubectl get events									--> shows all the events occured
+
+==================
+
+selector: Defines how the replicaset identifies which pod is responsible for. 
+
+"matchlabel" looks for the pods that have the label
+
+This is crucial to manage. 
+Replicaset managesthe pods that matches the selector. 
+
+===================
+
+problem with pod: Due to any reason, if our pod deleted, its gone. New pod wont create automatically.
+
+Solution: replicaset
+
+Replicaset: This will ensure our application is running with given number of identical pods. If any pod deleted, it creates a new pod automatically. 
+
+
+kubectl get rs
+kubectl get replicasets
+
+kubectl delete pods myfirstrs-5wf87 myfirstrs-psjsb myfirstrs-r2t5f
+
+
+
+
+
 
 
 
