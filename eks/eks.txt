@@ -231,6 +231,10 @@ kubectl get replicasets
 
 kubectl delete pods myfirstrs-5wf87 myfirstrs-psjsb myfirstrs-r2t5f
 
+kubectl delete rs myfirstrs
+
+
+eksctl delete cluster --name ekswithavinash 
 
 
 
