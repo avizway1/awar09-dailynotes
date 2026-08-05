@@ -1,9 +1,11 @@
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
-  name: myfirstrs
+  name: mynginx
+  annotations:
+    kubernetes.io/change-cause: "updating to newer version"
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: nginx
@@ -14,6 +16,6 @@ spec:
     spec:
       containers:
       - name: myfirstcontainer
-        image: nginx:1.30.4
+        image: nginx:1.31.3
         ports:
         - containerPort: 80

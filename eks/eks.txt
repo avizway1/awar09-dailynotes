@@ -236,6 +236,108 @@ kubectl delete rs myfirstrs
 
 eksctl delete cluster --name ekswithavinash 
 
+==================================================================
+
+D: 05/08/2026
+
+
+kubectl exec -it mynginx-57db5769ff-5mq5g -- /bin/bash
+
+nginx/1.31.3		--> current version
+nginx/1.30.4 		--> Want to change it
+
+
+Replicaset: This will ensure our application is running with given number of identical pods. If any pod deleted, it creates a new pod automatically. 
+
+If you want to change your application/nginx version, you need to delete the old replicaset and recreate with updated version. 
+
+Problem: We cannot upgrade to newer version. Need to delete and recreate again. 
+
+-----------------
+
+Deployment : This is K8s highest level of abstraction that manages the replicasets and pods. 
+
+if our nginx version is 1.30.4
+you decided to update it to 1.31.3
+Deployment ensures that, upgradation takes place without any downtime.
+If we required, we can rollback to previous version (if anything goes wrong).
+
+
+rolling update: 
+max surge : 2
+min unavailable: 1
+
+kubectl exec -it mynginx-57db5769ff-86g4m -- /bin/bash
+
+kubectl rollout history deployment/mynginx
+
+kubectl rollout undo deployment/mynginx						--> undo the latest deployment
+
+kubectl rollout undo deployment/mynginx	 --to-revision=3	--> undo the latest deployment
+
+kubectl rollout status deployment/mynginx
+
+kubectl rollout restart deployment/mynginx
+
+=======================
+
+Resource Limiting: 
+
+kube-scheduler uses this value to find a cluster node with enough room to host the pod. If no node has enough capacity, pod wont be scheduled.
+
+Requests : Guaranteed Minimum : The CPU or memory K8s guarantees to allocate to a cotnainer. 
+
+Limits: Hard Ceiling : The absolute maximum amount of CPU or memory a container is permissted to consume at runtime. This prevents a single container from utilising alot of resources. 
+
+
+memory: Measured in bytes.. 
+Megabytes : M
+Mebibytes : Mi
+
+CPU measured in cores or millicores.. 
+1000m --> 1 vCPU
+250m --> 25% of a CORE (0.25 CPU)
+
+kubectl describe pod mynginx-withlimit-8d6b995c8-28zw2
+
+kubectl top pods
+kubectl top pods -A
+
+kubectl top nodes
+
+
+====================================
+
+Service : Service helps to distribute the load to multiple pods. We need a Kubernetes Service because Pod IP addresses are unstable and temporary.
+
+==> Service always use selector option (key and value of the pods)
+
+We have 3 types of services.
+
+1. ClusterIP (Default)
+--> Works only internally, within the cluster.
+--> This creates a stable IP address, but IT works only within the cluster. 
+--> Treat it like "Internal office intercom system"
+
+kubectl get svc
+
+kubectl describe svc cip-service
+
+TO test the output locally in our laptop: 
+
+kubectl port-forward svc/cip-service 8080:80
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
