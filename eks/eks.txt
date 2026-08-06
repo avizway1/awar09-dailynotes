@@ -327,21 +327,66 @@ TO test the output locally in our laptop:
 
 kubectl port-forward svc/cip-service 8080:80
 
+----------
+
+D: 06/08/2026
+
+2. NodePort Service : Nodeport picks a static port from range to expose our application. 
+
+NodePort has specific range of ports to map: 30,000 - 32,767
+We can choose manually, if we want to.
+Service will be delivered to outside using Node/Host IP address. 
+** We need to open the port at SG of Ec2 instance level. 
+
+--------
+
+3. LoadBalancer
+
+This links to aws Loadbalancer, But it uses Classic Load Balancer (AWS Stopped supporint)
+For quick tests, we use this.
+CCM - Cloud Controller manager - Helps to interact with AWS and Create the Load Balancer.
+
+-----------
+
+4. Headless Service : If you set clusterIP: None, It creates a headless service, We use this witl stateful applications.
+
+5. Externalname : Instead of routing traffic to pods, it maps a shortcut name in our cluster with External DNS access, We need to integrate Route53 DNS name. * We dont use much in EKS.
+
+=============================== 
 
 
+Namespace : Helps to maange our workloads with Logical isolations.
+
+Problem: same label; uses by multiple teams, this can cause work overwrites.
+Problem: One team's workload is using more cluster resources than they really required.
+
+default	: THis is the default namespace picked by our workload. If we dont specify namespace in manifest, this will be picked.
+
+kube-system : K8s internal infrastructure critical workload management resides here. DO not modify / delete / deploy regular workload here.
+
+kube-node-lease : This act as health heartbeat tracker. Manages node heartbeat to track node availability.
+
+kube-public : This namespace is readably by anyoone, even without authentication.
 
 
+kubectl get pods			--> picks the default namespace and shows the pods
+
+kubectl get pods -A			--> List the pods from all the namespaces
+
+kubectl create ns myapp
+
+kubectl get pods -n myapp
+
+kubectl config set-context --current --namespace=myapp			--> setting defualt ns as myapp, no need to pass "-n myapp" along with all the commands.
 
 
+alias kgp='kubectl get pods'
+alias kgn='kubectl get nodes'
+alias kgs='kubectl get svc'
 
+Addressing problem 2 :
 
-
-
-
-
-
-
-
+limitrange on Namespace: We can apply max resources we can allocate to containers. 
 
 
 
