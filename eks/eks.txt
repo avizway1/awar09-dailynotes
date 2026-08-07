@@ -354,7 +354,6 @@ CCM - Cloud Controller manager - Helps to interact with AWS and Create the Load 
 
 =============================== 
 
-
 Namespace : Helps to maange our workloads with Logical isolations.
 
 Problem: same label; uses by multiple teams, this can cause work overwrites.
@@ -379,7 +378,6 @@ kubectl get pods -n myapp
 
 kubectl config set-context --current --namespace=myapp			--> setting defualt ns as myapp, no need to pass "-n myapp" along with all the commands.
 
-
 alias kgp='kubectl get pods'
 alias kgn='kubectl get nodes'
 alias kgs='kubectl get svc'
@@ -387,6 +385,147 @@ alias kgs='kubectl get svc'
 Addressing problem 2 :
 
 limitrange on Namespace: We can apply max resources we can allocate to containers. 
+
+==========================
+
+D: 07/08/2026
+
+Daemonsets: This will ensure eactly one copy of a specific pod runs on every single worker node.
+--> If we add a new node to the cluster, new node should get the pod automatically.
+--> THis is commonly used for "Monitoring tools", "Log exports", network traffic filters at Node level.
+
+If we are using Deployment, we can define the required worklaod count.. 
+
+With DAEMONSET, Pod count will be same as Node count..
+
+
+kubectl get ds
+kubectl get daemonset
+
+
+eksctl scale nodegroup --cluster ekswithavinash --name mycustomng --nodes 2 --nodes-max 4
+
+======================
+
+CNI : Contianer Network Interface : Plugin helps to extend k8s networking to VPC
+
+CSI : Container Storage Interface : Plugin helps to extend k8s storage to AWS (i.e; ebs, efs)
+
+
+PV : Persistent Volume : A storage resources in the cluster/AWS. (apartment i build)
+PVC : Persistent Volume Claim : A request for storage. (i need 2 bhk)
+
+pod --> This pod needs storage --> PVC (Request) --> PV (Actual Storage) --> AWS EBS / EFS.
+
+By default, all pods gets the default "epemeral storage". Data cannot be available if pod deleted/crashed.
+
+We have 2 types of provisionings.
+
+1. Dynamic Provisioning: We only create PVC. We ca use an addl helper "StorageClass" this act as automatic builder.
+
+2. Static Provisioning: We explicitly need to create PV and PVC. 
+
+
+AccessModes: 
+
+RWO : ReadWriteOnce : EBS (gp2, gp3, io1, io2) : One node can read/write.
+RWX : ReadWriteMany : EFS : Multiple nodes can read/write.
+ROX : ReadOnlyMany  : Multiple nodes can read
+
+
+Step 1 : Approve OIDC Provider
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash --approve
+
+Step 2 : Create an IAM Service Account (IRSA)
+
+kubectl get sa -n kube-system
+
+eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster ekswithavinash --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve --override-existing-serviceaccounts
+
+kubectl describe sa ebs-csi-controller-sa -n kube-system
+
+Step 3 : Install EBS CSI Driver
+
+eksctl create addon --name aws-ebs-csi-driver --cluster ekswithavinash --force
+
+
+=================
+
+StorageClass : 
+
+VolumeBndingMode: When the K8s actually creates the physical disk in EBS servcie.
+
+Immediate : When PVC is created, it creates volume.
+WaitForFirstConsumer: Storage creates when a pod uses the PVC. 
+
+=====================
+
+stateless: Every single request will be treated as brand new and isolated. it wont remeber any past actions.
+
+stateful: remember the past.. It saves the data about the identity and past actions. It keeps history.
+
+
+StatefulSet: A stateful set manages the stateful application.
+--> Persistent Storage
+--> Stable network identity
+--> Creation and termination will follo order.
+
+mydb-0
+mydb-1
+mydb-2
+mydb-3
+
+Statefulsets has a pre-requisite, We need "HEADLESS SERVICE"
+
+headless Servcie: When we set ClusterIP to "None". 
+--> It gives each pod its own dns name. This helps for service communication and stable pod identity.
+
+mydb-0.myapp-headless.default.svc.cluster.local
+mydb-1.myapp-headless.default.svc.cluster.local
+
+====================
+
+
+kubectl exec -it mysql-0 -- mysql -uroot -psecret123
+
+CREATE DATABASE storagetest;
+USE storagetest;
+
+CREATE TABLE students (id INT PRIMARY KEY, name VARCHAR(30));
+
+INSERT INTO students VALUES (1, 'Avinash'), (2, 'Anudeep'), (3, 'aravind');
+
+SELECT * FROM students;
+
+---
+
+kubectl delete pods mysql-0
+
+---
+
+kubectl exec -it mysql-0 -- mysql -uroot -psecret123 -e "SELECT * FROM storagetest.students;"
+
+
+kubectl exec -it mysql-0 -- mysql -uroot -psecret123 -e "SELECT * FROM storagetest.students;"
+
+
+=========
+
+
+eksctl create addon --name aws-efs-csi-driver --cluster ekswithavinash --force
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+	provisioning-mode: efs-ap
+	fileSystemId: fs-jsfhdsjgds
+	directoryperms: "700"
+
+
 
 
 
