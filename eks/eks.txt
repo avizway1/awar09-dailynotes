@@ -395,6 +395,3 @@ limitrange on Namespace: We can apply max resources we can allocate to container
 
 
 
-
-
-
