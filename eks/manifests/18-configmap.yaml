@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DB_USERNAME: "dbadmin"
+  DB_PORT: "3306"
+  DB_ENV: "production"
+
+#kubectl create configmap app-config --from-literal=DB_USERNAME=dbadmin --from-literal=DB_PORT=3306
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod1
+spec:
+  containers:
+  - name: myfirstcontainer
+    image: busybox
+    command: ["sh", "-c", "echo Hello from $DB_USERNAME && sleep 120"]
+    envFrom:
+      - configMapRef:
+          name: app-config
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod2
+spec:
+  containers:
+  - name: myfirstcontainer
+    image: busybox
+    command: ["sh", "-c", "echo Hello from $DB_USERNAME && sleep 120"]
+    volumeMounts:
+      - name: configmap-volume
+        mountPath: /etc/config
+  volumes: 
+    - name: configmap-volume
+      configMap:
+        name: app-config
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod3
+spec:
+  containers:
+  - name: myfirstcontainer
+    image: busybox
+    command: ["sh", "-c", "echo Hello from $ENVIRONMENT && sleep 120"]
+    env:
+      - name: ENVIRONMENT
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: DB_ENV

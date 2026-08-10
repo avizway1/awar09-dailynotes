@@ -526,10 +526,47 @@ parameters:
 	directoryperms: "700"
 
 
+=============================
 
-NAME                    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-mysql-storage-mysql-0   Bound    pvc-28f489be-467a-4b4e-ad03-34ca2c3d13df   10Gi       RWO            gp3            <unset>                 16m
-mysql-storage-mysql-1   Bound    pvc-460615af-2d16-4705-8d2b-93550a6e520c   10Gi       RWO            gp3            <unset>                 16m
+D: 10/08/2026
+
+aws eks create-addon --cluster-name ekswithavinash --addon-name aws-efs-csi-driver --region ap-south-1
+
+echo "<h1> Hello from EFS Shared Storage</h1><p>THis is from EFS</p>" > index.html
+
+
+kubectl delete pods efs-demo-app-845bd484fd-576km efs-demo-app-845bd484fd-j7vdm efs-demo-app-845bd484fd-k65b2
+
+-------------
+
+For Non-Sensitive information: use "configmap"	(Similar to aws parameter store)
+For Sensitive information: use "secrets"	(Similar to aws Secrets Manager)
+
+** STill, using secrets is not highly secured, as secrets are store in encoded, not encrypted. 
+We can easily decode the secrets. 
+
+We can pass configmap to our workload in multiple ways.
+
+1. Add the entire configmap as environment variable.
+2. Add config map as Volume to the contianer
+3. We can create an Environment varibale and get the value from configmap
+
+--
+kubectl get configmap
+kubectl get cm
+kubectl get secrets
+
+kubectl get secret db-secret -o jsonpath="{.data.DB_PASSWORD}" | base64 --decode
+
+
+
+
+
+
+
+
+
+
 
 
 
