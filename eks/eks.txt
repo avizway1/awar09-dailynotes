@@ -527,7 +527,9 @@ parameters:
 
 
 
-
+NAME                    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+mysql-storage-mysql-0   Bound    pvc-28f489be-467a-4b4e-ad03-34ca2c3d13df   10Gi       RWO            gp3            <unset>                 16m
+mysql-storage-mysql-1   Bound    pvc-460615af-2d16-4705-8d2b-93550a6e520c   10Gi       RWO            gp3            <unset>                 16m
 
 
 
