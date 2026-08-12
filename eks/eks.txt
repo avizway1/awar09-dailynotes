@@ -558,12 +558,80 @@ kubectl get secrets
 
 kubectl get secret db-secret -o jsonpath="{.data.DB_PASSWORD}" | base64 --decode
 
+===============================
+
+D: 11/08/2026
+
+Helm is a package manager for K8s. Its similar to yum/dnf of Linux os.
+
+chart : A packaged of resource templates.
+Repository : You can find helm repos at "artifacthub.io"
+release : A version of our application.
+values : store configurable values/info into this file, so you can modify this file, Treat it as a tfvars file in terraform.
+
+https://helm.sh/		--> Install in your laptop
+
+run "helm version" to identify the installation status / installed version.
+
+Make sure to install docker using "docker login", then only we can pull helm charts.
 
 
+helm repo list				--> shows the installed repos in this device
+
+helm repo update			--> Updates the installed repos
 
 
+add the repo:
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm pull bitnami/nginx --version 25.0.20 --untar				--> Pull the chart and unzip
 
 
+helm install my-nginx bitnami/nginx --version 25.0.20 --dry-run		--> Perform dry run
+
+helm install my-nginx bitnami/nginx --version 25.0.20				--> Install the chart
+
+helm install my-nginx bitnami/nginx --version 25.0.20 --set replicaCount=3		--> Update default value when chart is installing
+
+helm install my-nginx bitnami/nginx --version 25.0.20 --set replicaCount=3
+
+helm upgrade my-nginx bitnami/nginx --version 25.0.20 --set replicaCount=3 --description "updated rc to 3"
+
+helm upgrade my-nginx bitnami/nginx --version 25.0.20 --set replicaCount=5 --description "updated rc to 5"
+
+helm hisotory my-nginx
+
+helm rollback my-nginx 2
+
+helm lint <chart-location>			--> identify bugs / syntax errors / format errors
+
+helm create <chart-name>
+
+
+========================
+
+
+IRSA : IAM Role for Service Account..
+
+EKS Pods canot directly assume the IAM role, it needs Service account in k8s. 
+
+How we associate an IAM role to an ec2 instance, same manner we can use this IRSA for pods.
+
+eksctl create iamserviceaccount --name s3-access-sa --namespace default --cluster ekswithavinash --region ap-south-1 --attach-policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --approve
+
+
+	pod
+	 |
+	 V
+service-account
+	 |
+	 V
+  IAM Role
+	 |
+	 V
+  AWS STS
+
+==========================
 
 
 

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mys3access
+spec:
+  serviceAccountName: s3-access-sa
+  containers:
+  - name: awscli
+    image: amazon/aws-cli:latest
+    command: ["sleep", "600"]
