@@ -633,6 +633,104 @@ service-account
 
 ==========================
 
+D: 12/08/2026
+
+K8s has 3 types of scalings.
+
+1. HPA : Horizontal Autoscaler : Based on Pods CPU/memory, Pod count will increase / decrease.
+2. VPA : Virtical Autoscaler : This will adjust the existing Pod's CPU/Memory, THis required pod to restart. (We dont use much in real environments)
+3. Cluster AutoScaler : K8s adjust the nodes based on the pod count: Add/Remove instance from node group.
+
+
+kubectl get hpa
+
+kubectl autoscale deployment php-apache --cpu=60% --min=1 --max=20
+
+We need to adjust the "/spec.maxReplicas" value to adjust the hpa max count after creation.
+
+kubectl patch hpa php-apache --type='json' -p='[{"op": "replace", "path": "/spec/maxReplicas", "value": 25}]'
+
+---
+
+Below command create a pod and it generated lot of traffic to the php-apache service. 
+
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+
+======================================
+
+VPA Virtical pod autoscaler..
+
+--> VPA and HPA Dont work side by Side.
+
+We have 4 update modes in VPA.
+
+Off : It only shows the suggestions, does not apply changes.
+Initial : Applies recommendations only during the pod creation. Running pods are never touched.
+InPlaceOrRecreate: Attempt to resize CPU/Memory on the fly wihtout restarting the pod. Fall back to eviction if node capacity ot runtime limits prevent it.
+Recreate: It evicts the running pods to create new pods with updated resources.
+
+----
+
+goldilocks is an opensource tool to identify suitable workload configurations for our pods.
+
+helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+
+kubectl create ns goldilocks
+
+helm install goldilocks --namespace goldilocks fairwinds-stable/goldilocks --version 10.5.0
+
+goldilocks wont detect our namespaces by defualt, we need to add the label with goldilcoks enabled.
+
+kubectl label ns default goldilocks.fairwinds.com/enabled=true
+kubectl label ns goldilocks goldilocks.fairwinds.com/enabled=true
+
+QoS : Quality of Service
+
+Guaranteed QoS : Every Container must have CPU & memory requests exactly equal to limits
+
+kubectl -n goldilocks port-forward svc/goldilocks-dashboard 8080:80
+
+========================
+
+Cluster Autoscaler : 
+
+1. Adjust the autoscaling group's minimum and maximum count.
+2. Add below iam policies to ec2 instance iam role.
+	--> Autoscalingfullaccess
+	--> Amazonekscomputepolicy
+
+Install autoscaler helm chart
+
+helm repo add autoscaler https://kubernetes.github.io/autoscaler
+
+helm repo update
+
+helm install cluster-autoscaler autoscaler/cluster-autoscaler \
+--namespace kube-system \
+--set autoDiscovery.clusterName=ekswithavinash \
+--set awsRegion=ap-south-1 \
+--set extraArgs.balance-similar-node-groups=true \
+--set extraArgs.skip-nodes-with-system-pods=false
+
+kubectl get pods -n kube-system | grep cluster-autoscaler
+
+
+kubectl scale deployment php-apache --replicas=20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
