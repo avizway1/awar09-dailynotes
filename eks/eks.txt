@@ -144,6 +144,7 @@ oidc : openID Conect : Its an open identity authentication protocol build on top
 
 Enable OIDC provider: This oidc helps to connect aws user/components to eks components i.e; service accounts.
 
+
 eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash --approve
 
 
@@ -717,18 +718,135 @@ kubectl get pods -n kube-system | grep cluster-autoscaler
 
 kubectl scale deployment php-apache --replicas=20
 
+=================
+
+eksctl create cluster --name ekswithavinash-uat --version 1.35 --region ap-south-1 --zones=ap-south-1a,ap-south-1b --nodegroup-name mycustomng --nodes 2 --node-type c7i-flex.large --node-ami-family=AmazonLinux2023 --managed
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash-uat --approve
 
 
+cluster-1 : ekswithavinash
+cluster-2 : ekswithavinash-uat
 
 
+kubectl : ~/.kube/config
+
+So primarily the context contains three things:
+1. cluster
+2. user
+3. namespace
+
+These are the three things we combine and we call it a context.
+
+Whenever we are running `kubectl get pods`, it reads the current context to know which cluster, user, and namespace to use.
 
 
+We can run a command `kubectl config get-context` so it is going to list out all the contexts we have in our laptop.
+
+cat ~/.kube/config
+
+---------
+
+So we can add friendly names to our EKS clusters so that we can easily identify. We can give a command like 
 
 
+aws eks update-kubeconfig --region ap-south-1 --name ekswithavinash --alias dev-cluster
+aws eks update-kubeconfig --region ap-south-1 --name ekswithavinash-uat --alias uat-cluster
 
 
+kubectl config get-contexts
+
+--> active context will have *
 
 
+-----------
+list the resources from an eks cluster without switching: 
+
+kubectl --context=uat-cluster get pods -A
+kubectl --context=uat-cluster get pods -n kube-system
+
+
+------
+
+Switching context permanently:
+
+kubectl config use-context dev-cluster
+kubectl config use-context uat-cluster
+
+-----
+
+So set up a default namespace for a context. In general if you want to list out resources from a specific namespace, we have to give -n then the namespace..
+
+But if you configure a default namespace along with the context, we manually no need to pass if -n parameter. 
+
+
+kubectl config set-context dev-cluster --namespace=kube-system
+
+kubectl config set-context uat-cluster --namespace=default
+
+=========================
+
+
+From a brand new instance/laptop, if you are trying to connect to exiosting EKS cluster,
+
+So you first install three tools:
+1. EKSCTL
+2. kubeCTL
+3. AWS CLI
+
+Now, update the kubeconfig
+
+aws eks update-kubeconfig --region ap-south-1 --name ekswithavinash --alias dev-cluster
+
+we have 2 authentication modes in access entrries
+
+Authentication mode
+1. EKS API
+2. ConfigMap
+
+----
+
+eks cluster-admin CLusterRole can do below all the action
+
+- Viewing all the pods
+- Creating/deleting pods
+- Creating namespaces
+- Access all namespaces
+- Managing nodes
+- Managing secrets
+- Full control of everything
+
+----
+
+eksadminpolicy almost same as clusteradmin policy, but he cant modify cluster level permissions i.e; rbac/clusterroles
+
+---
+
+eksadminviewpolicy : 
+
+With this particular policy we can do the below listed operations:
+- Viewing Pod Services deployments
+- Viewing Config Maps
+- Viewing Namespaces
+- view nodes
+- view events
+- view logs
+
+The below operations are restricted:
+- View secrets
+- create any resource
+- delete any resource
+- edit any resource
+- exec into pods
+
+---
+
+
+kubectl auth can-i get pods
+kubectl auth can-i create pods
+kubectl auth can-i create ns
+kubectl auth can-i create secret
+kubectl auth can-i get cm
 
 
 
