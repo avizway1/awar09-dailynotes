@@ -765,7 +765,6 @@ list the resources from an eks cluster without switching:
 kubectl --context=uat-cluster get pods -A
 kubectl --context=uat-cluster get pods -n kube-system
 
-
 ------
 
 Switching context permanently:
@@ -847,6 +846,63 @@ kubectl auth can-i create pods
 kubectl auth can-i create ns
 kubectl auth can-i create secret
 kubectl auth can-i get cm
+
+
+============================================
+
+D: 14/08/2026
+
+docker pull avizway/app:v1
+docker pull avizway/app:v2
+docker pull avizway/app:v3
+docker pull avizway/app:canary
+docker pull avizway/app:blue
+docker pull avizway/app:green
+
+
+
+strategy			Downtime		speed			cost			risk
+
+Rolling Update		No				Fast			Normal			Low
+Recreate			Yes				moderate		Normal			medium
+Blue/green			No				Instant			double (2x)		very low
+Canary				No				Fast			moderate		Low
+
+
+--> If we dont define the strategy, it picks 25% as maxSurge and 25% as maxUnavailable.. 
+
+rollingUpdate:
+	maxSurge: 1
+	maxUnavailable: 1
+---
+
+argo rollout: 
+--> This supports only Blue/Green and Canary Deployment only.. 
+
+Argo Rollout gives flexibility to deploy our application from one version to another version in a step manner:
+1. by setting up weight
+2. then we can pass for some time
+3. then we can change the weight
+4. then we can wait again
+5. and finally we can set weight to 100%
+
+
+----
+plugin for macos
+
+brew install argoproj/tap/kubectl-argo-rollouts
+
+---
+
+Install argo rollouts controller into our eks cluster
+
+kubectl create namespace argo-rollouts
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
+
+----
+
+
 
 
 
