@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: avizway/app:v2
+          image: avizway/app:v1
           ports:
             - containerPort: 5000
           env:
