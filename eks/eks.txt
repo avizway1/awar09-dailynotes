@@ -859,8 +859,6 @@ docker pull avizway/app:canary
 docker pull avizway/app:blue
 docker pull avizway/app:green
 
-
-
 strategy			Downtime		speed			cost			risk
 
 Rolling Update		No				Fast			Normal			Low
@@ -900,7 +898,152 @@ kubectl create namespace argo-rollouts
 kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 
 
-----
+==================================
+
+D: 17/08/2026
+
+
+Node Affinity: This option controls which nodes your pod should run on, based on node labels. 
+
+kubectl get nodes --show-labels
+
+kubectl describe nodes ip-192-168-13-127.ap-south-1.compute.internal
+
+
+requiredDuringSchedulingIgnoredDuringExecution : Strict requirement.
+
+requiredDuringScheduling: HARD RULE :  this is a mandatory rule that the kube scheduler must follow when deciding where to place a new pod. 
+--> If the scheduler cannot find a node that perfectly matches our criteria, the pod will not be scheduled. 
+
+IgnoredDuringExecution: once a pod is successfully running on a node, Kubernetes will not continuously re-evaluate this specific rule against the node. 
+--> If someone removes or modifies the label on the node while the pod is active, Kubernetes will not evict or terminate the pod. The pod will safely continue running until it finishes the work or is manually deleted. 
+
+---
+
+preferredDuringSchedulingIgnoredDuringExecution : Soft preference/requirement.
+
+preferredDuringScheduling : this is a soft preference. If there is any node that matches with the label, it will obviously run there. If a node has that label, it will run elsewhere. That's why we call it a soft preference.
+
+
+Warning  FailedScheduling  69s   default-scheduler  0/2 nodes are available: 2 node(s) didn't match Pod's node affinity/selector. 
+
+
+
+Add label to the node:
+kubectl label nodes ip-192-168-13-127.ap-south-1.compute.internal disktype=ssd
+
+
+Remove the label from node: 
+kubectl label nodes ip-192-168-13-127.ap-south-1.compute.internal disktype-
+
+=================================
+
+Pod Affinity : pods stick together on the same node. This will be useful when both the services need ultra-low latency while communicating. 
+
+
+Pod Anti Affinity : parts cannot run on the same node. 
+
+=============
+
+
+Taint : (NODE) : This is a special seat with "reserved" option.
+Tolaration : (POD) : The "PASS" to get the "Reserved" seat.
+
+
+NoSchedule : new pods wont be scheduled here.
+PreferNoSchedule : K8s avoids scheduling workload here, But a soft rule.
+
+
+Step 1 : add a label to a node so we can force our pod to run on that specific node using the node selector option. 
+
+kubectl label nodes ip-192-168-13-127.ap-south-1.compute.internal disktype=ssd
+
+Step 2 : taint the same node
+
+kubectl taint nodes ip-192-168-13-127.ap-south-1.compute.internal role=db:NoSchedule
+
+kubectl describe nodes ip-192-168-13-127.ap-south-1.compute.internal
+
+to untaint a node: 
+
+kubectl taint nodes ip-192-168-13-127.ap-south-1.compute.internal role=db:NoSchedule-
+
+======================
+
+Node Drain : the drain evicts all pods from a node gracefully. This is commonly used:
+1. node maintenance
+2. decommissioning a node
+3. cluster upgrades
+
+Flags: 
+--ignore-daemonsets : Skip DaemonSet pods. They run on every nodes.
+--delete-emptydir-data : Delete pods that are using emptyDir volumes.
+--timeout=60s : Fail if the drain takes longer than 60 seconds.
+
+After a node is drained three things happen:
+1. The node is marked as scheduling disabled (cordoned).
+2. No new pods will be scheduled on this node.
+3. Existing pods are evicted and rescheduled on other nodes.
+
+kubectl drain ip-192-168-13-127.ap-south-1.compute.internal --ignore-daemonsets --delete-emptydir-data --timeout=120s --force
+
+kubectl describe nodes ip-192-168-13-127.ap-south-1.compute.internal
+
+kubectl uncordon ip-192-168-13-127.ap-south-1.compute.internal
+
+--> Our workload is not going to redistribute or rebalance across the nodes automatically if you uncordon a node. We can run the command below so the workload is going to automatically distribute. 
+
+kubectl rollout restart deployment mynginx
+
+=======================
+
+Liveness Probe : Is our container alive.? 	If failed: Container is restarted.
+
+Readiness probe : Is container ready to serve traffic.?	If failed: Pod is removed from the service.
+
+Startup probe : Has the container finished starting.?	If failed: Container is killed and restarted.
+
+
+
+initialDelaySeconds 	: Wait before first check.
+periofSeconds 			: perform the Checks for every "x" seconds.
+failureThreshould 		: Restart after "x" consecutive failures.
+
+** 
+1. Pods won't receive traffic until the readiness probe has passed.
+2. Startup probe configuration helps a slow-starting application.
+3. Liveness probe and readiness probe won't start until the "startup probe" has succeeded.
+
+
+====================
+
+PDB : pod Disruption Budget : PDB tells Kubernetes the minimum number of pods that must always remain up and running when the cluster undergoes node and pod disruptions. 
+
+minAvailable :  Let's assume we have a deployment with 5 replicas. We can set minimum available to 4. 
+--> Kubernetes will only allow draining and killing one pod at a time. It will wait for that one pod to successfully restart on a new node before it allows or touches the next one. 
+
+maxUnavailable : we can define the maximum number of parts that are allowed to be offline at any given moment. 
+
+--> THis is not applicable for: 
+Involuntary Disruptions i.e; Hardware failures
+Unmanaged Pods (creating a pod without replicaset and deployment)
+Direct pod deletions
+
+================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
