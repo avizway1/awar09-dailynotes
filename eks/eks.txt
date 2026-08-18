@@ -1031,11 +1031,19 @@ Direct pod deletions
 
 ================================
 
+D: 18/08/2026
+
+DNS name format for a service: 
+
+<servicename>.<namespace>.svc.<cluster-domain>
+
+backend.default.svc.cluster.local
+
+we can use http://backend
+https://backend.default.svc.cluster.local
 
 
-
-
-
+---> ISTIO
 
 
 
