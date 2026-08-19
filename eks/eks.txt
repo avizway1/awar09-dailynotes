@@ -1043,17 +1043,113 @@ we can use http://backend
 https://backend.default.svc.cluster.local
 
 
----> ISTIO
+---> ISTIO --> refer istio.txt file
+
+=============================
+
+EKS AutoMode: this is a new option in AWS EKS. In regular EKS we have models like a managed node group so we need to manage the nodes or the data plane. AWS manages the control plane but in AWS EKS auto mode AWS manages the control plane as well as the data plane.
+
+Below are the points which explain the auto mode advantages:
+1. Compute auto-scaling is built-in.
+2. Pods and service network also in-built. 
+3. It can pick spot instances as well as on-demand instances combined.
+4. Auto mode picks the right size configuration automatically.
+5. We can configure a node pool with the required instance configurations, like on-demand and spot types.
 
 
+eksctl create cluster --name ekswithavinash --version 1.35 --region ap-south-1 --zones=ap-south-1a,ap-south-1b --enable-auto-mode
 
 
+Karpenter is a flexible, high-performance, open-source node autoscaler for Kubernetes built by AWS for Amazon EKS. It watches for unschedulable pods, evaluates their resource requirements, and instantly provisions right-sized EC2 instances, reducing costs and operational overhead compared to traditional autoscalers
+
+----
+Key Benefits over Cluster Autoscaler:
+
+Fast Launch Times: Provisions compute capacity in seconds rather than minutes.
+
+Instance Flexibility: Bypasses rigid managed node groups by picking from a wide range of instance types.
+
+Native Control: Uses Kubernetes-native custom resources like NodePool to manage configurations via simple YAML files
 
 
+============================================
+
+EKS fargate: Serverless, No Node at all, Entire workload run as pod.
+
+EKS Fargate has some limitations:
+- EKS Fargate uses the cold start method. Because of cold start pod creation or pod scaling generally takes 30 to 90 seconds.
+- The EKS Fargate method does not support daemon sets.
+- We cannot use EBS with the Fargate method. If you want to have shared storage we can use only EFS.
+- EKS Fargate workload supports a maximum of one individual pod with 16 vCPU and 120 GB of memory only.
+- It has a lot of non-compliance standards. EKS Forge is not compatible with or compliant with PCA, DSS, HIPAA, FedRAMP, and SOC 2.
 
 
+step 1: 
+eksctl create cluster --name ekswithavinash-fg --version 1.35 --fargate
+
+step 2 : create a fargate profile
+
+kubectl create ns myfgns
+eksctl create fargateprofile --cluster ekswithavinash-fg --name myfgprofile --namespace myfgns
+
+kubectl get nodes
+kubectl get poods -n myfgns
+
+============================================
+
+Can i run K8s in my local laptop.? Can i run in an ec2 instance.?
+
+Ans: YES, With MINIKUBE. But its purely for Development envs only. Not designed for production workload.
 
 
+1. Install kubectl
+
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
+2. Install Docker, minikube run as container - K8s run as container.
+
+sudo dnf install docker -y
+sudo systemctl enable docker --now
+sudo usermod -aG docker ec2-user
+newgrp docker
+
+3. Install miniklube
+
+https://kubernetes.io/docs/tasks/tools/
+
+curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
+
+minikube version
+
+minikube start --driver=docker
+minikube start --driver=docker --cpu=2 --memory=2048 --disk-size=10g
+
+minikube config set driver docker
+
+minikube status
+minikube stop
+minikube start
+minikube delete
+minikube logs
+
+Create a deployment and service in minikube, then perform port-forward to access it
+
+kubectl port-forward --address 0.0.0.0 svc/svc-name 8080:80 -n <default/ns>
+
+
+------------------
+
+minikube dashboard
+
+kubectl proxy --address='0.0.0.0' --disable-filter=true
+
+
+http://43.205.109.236:8001/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/
 
 
 
