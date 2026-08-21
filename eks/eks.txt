@@ -1224,6 +1224,74 @@ eksctl create iamserviceaccount --cluster=ekswithavinash --namespace=default --n
 
 --> Add dynamodb permissions to above IRSA
 
+==================================
+
+D: 21/08/2026
+
+o11y : Observebility : 
+
+Metrics : Numbers and Graphs 	: What is happening.?
+logs : Text Records 			: Why is it happening.? 
+Traces : Flow graph 			: Where did it break.?
+
+CW agent is AWS Native monitoring, logging, alerting (via SNS) service.
+
+To install the CloudWatch agent in our EKS cluster, we need to add the 'CloudWatchagentserverpolicy'. The policy should be attached to our EKS nodes IAM role. 
+
+--> Install the add-on
+
+aws eks create-addon --addon-name amazon-cloudwatch-observability --cluster-name ekswithavinash --region ap-south-1
+
+
+CloudWatch agent helps to get the node, pod, and container-level metrics. 
+
+Fluent Bit is a lightweight high-performance log processor. This runs as a daemon set, one pod per node. It collects logs from "var/log/containers" on each node then it is going to send them to CloudWatch Logs. 
+
+---
+
+/aws/containerinsights/ekswithavinash/host			--> system level logs at node
+/aws/containerinsights/ekswithavinash/dataplane		--> kubelet, kube-proxy, cotnainer runtime
+/aws/containerinsights/ekswithavinash/application	--> stdout, stderr, consolelog(), ERROR, exception
+/aws/containerinsights/ekswithavinash/performance	--> performance logs
+
+
+aws logs tail /aws/containerinsights/ekswithavinash/application --follow --filter-pattern "error"
+aws logs tail /aws/containerinsights/ekswithavinash/application --follow --filter-pattern "kubectl"
+
+===============
+
+We can enable EKS control plane logs. 
+
+under eks cluster --> observability --> Control plane logs --> 
+
+
+API server			: Logs pertaining to API requests to the cluster.
+Audit 				: Logs pertaining to cluster access via the Kubernetes API.
+Authenticator		: Logs pertaining to authentication requests into the cluster.
+Controller manager	: Logs pertaining to state of cluster controllers.
+Scheduler			: Logs pertaining to scheduling decisions.
+
+
+====================
+
+Prometheus is an open-source metric collection and alerting application. 
+Grafana also is an open-source visualisation and dashboard generation service. 
+
+Prometheus 
+Data Store : TSDB - Time Series Database.
+Query : PromQL to Query the metrics.
+Pull Based : Prometheus scrapes the metrics from the target, i.e; pod or node. 
+alert manager : send alerts to emails (twillo) and slack (free)
+
+=====================
+
+kubectl-ai 		: k8s helpful ai tool, Developed by google, and now its opensourced.
+
+====================
+
+AWS DevOps agent : It has capabilities to analyse our Kubernetes workload and has a lot of other features as well. Make sure you spend some time over this weekend and explore this AWS DevOps agent. 
+
+
 
 
 
