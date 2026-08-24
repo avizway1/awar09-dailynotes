@@ -1293,10 +1293,65 @@ AWS DevOps agent : It has capabilities to analyse our Kubernetes workload and ha
 
 
 
+============================
+
+D: 24/08/2026
+
+ArgoCD helps us to deploy our application. It acts as a single source of truth. If we are making any changes manually, they won't take effect. All the changes have to be deployed to our EKS cluster via a Git repository only. 
+
+1. A Git repository acts as a source of truth.
+2. ArgoCD watches for the changes happening on GitHub and if it identifies or detects any change it will deploy those changes. This happens periodically every 3 minutes.
+3. ArgoCD detects drift between Git status and cluster state. It clearly mentions whether our application is in sync or out of sync.
+4. We can sync the cluster to match Git settings. We can configure this sync manually or automatically.
+
+ArgoCD has four primary components:
+1. API server 		- UI / CLI / CI Requests
+2. repo server		- Clones and renders the manifests
+3. app controller	- Compares the states and sync changes to the cluster
+4. Redis			- Caching 
+
+Instalaltion: 
+
+kubectl create namespace argocd
+
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d; echo
+
+
+sync-policy : 
+--> Automatic: If checked, application will automatically sync when changes are detected.
+--> Manual: Shows out of sync, need to manually sync the chnages.
+
+
+Prune Resources : Argo will delete resources if they are no longer defined in Git
+Self healing: Argo will force the state defined in Git into the cluster when a deviation in the cluster is detected
 
 
 
+project: default
+source:
+  repoURL: https://github.com/avizway1/awar09-argocd.git
+  path: .
+  targetRevision: main
+destination:
+  server: https://kubernetes.default.svc
+  namespace: myapp2
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+    enabled: true
+  syncOptions:
+    - CreateNamespace=true
 
+
+----------
+
+ArgoCD primarily works with a pull-based mechanism. 
 
 
 

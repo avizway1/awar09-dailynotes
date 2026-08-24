@@ -1,0 +1,64 @@
+
+
+Github Actions: it's a CI/CD platform built in GitHub. It helps us to automate tasks like building, testing, and deploying the code from our repository. Whenever any developer commits any changes to the GitHub repository, it will pick up the changes. It can perform the automated operations like building the code, testing the code, scanning for the changes, and deploying the changes to the server. It is going to perform all those operations automatically. 
+
+Prior to these GitHub Actions we used tools like Jenkins but now Jenkins is a bit outdated. Organisations are migrating to or using GitHub Actions a lot. 
+
+Below are the reasons why GitHub has become more popular in recent times:
+- Native GitHub integration
+- Easy YAML configurations
+- Multi-operating system support - Linux, Windows and macOS
+- Matrix builds	- test across multiple versions at the same time.
+- 2000 minutes per month for private repos and unlimited runs for public repos.
+
+Core components of GitHub Actions 
+
+1. Workflow : a workflow is a complete automation defined in a YAML file. This is generally stored in `.github/workflows` inside our repo. 
+
+Our REPO
+	|
+	|_ .github/
+		  |
+		  |__ workflows/
+		  			|
+					|__ file.yaml		--> The workflow file
+
+
+2. Event : an event is a trigger that actually starts the workflow. Common events are:
+- push				- When code is pushed
+- pull_request		- When a PR is created
+- scheduled			- Specific time or intervals using CRON
+- workflow despatch	- Manually trigger from the UI
+
+
+3. Job : a job is a group of steps that runs on the runner. 
+
+4. Step : a single task inside a job can run a shell command or it can use an action. One job can have multiple steps also. 
+
+5. Runner : a runner is nothing but a virtual machine that executes our jobs. We have two options:
+
+- GitHub-hosted runner: GitHub provides Ubuntu, Windows, and Mac operating systems.
+- Self-hosted: We can prepare our own server and add it as a self-hosted runner so all the jobs run inside our own server.
+
+6. Action : it's a reusable piece of code that does a specific task. We can use actions from GitHub Marketplace. GitHub has approved actions and verified publishers like AWS and Microsoft. We can pick it and use it instead of writing multiple commands. 
+
+actions/setup-node@v7
+actions/checkout@v6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
