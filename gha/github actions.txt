@@ -46,6 +46,62 @@ actions/setup-node@v7
 actions/checkout@v6
 
 
+-----
+
+https://github.com/marketplace/actions
+
+-----
+
+In GHA, we have three types of variables:
+1. Workflow variables: 			we can define these in our YAML file. $VAR_NAME
+2. Configuration variables: 	we can define these in the GitHub UI. ${{ vars.VAR_NAME }}
+3. Context variables: 			automatically defined by GitHub		  ${{ github.VAR_NAME }}
+
+https://docs.github.com/en/actions/reference/workflows-and-actions/contexts
+
+
+
+Workflow variable again has three options:
+1. Workflow level: If we define any variable at workflow level, it is available to all jobs and steps.
+
+name: 01 - my first job
+on:
+    workflow_dispatch:
+env:
+	CLOUD: AWS Cloud
+jobs:
+    my-first-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: run single command
+              run: echo "I AM using $CLOUD"
+
+
+2. Job level: If we define any variable at job level, it is available only within the job.
+
+name: 01 - my first job
+on:
+    workflow_dispatch:
+env:
+	CLOUD: AWS Cloud
+jobs:
+    my-first-job:
+        runs-on: ubuntu-latest
+		env: 
+			SUBJECT: vpc
+        steps:
+            - name: run single command
+              run: echo "I AM using $CLOUD"
+            - name: run single command
+              run: echo "I AM using $CLOUD and now learning $SUBJECT"
+
+3. Step level: If we define any variable at step level, it is available to that one particular step.
+
+
+
+
+
+
 
 
 
