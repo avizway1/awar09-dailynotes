@@ -60,7 +60,6 @@ In GHA, we have three types of variables:
 https://docs.github.com/en/actions/reference/workflows-and-actions/contexts
 
 
-
 Workflow variable again has three options:
 1. Workflow level: If we define any variable at workflow level, it is available to all jobs and steps.
 
@@ -98,17 +97,60 @@ jobs:
 3. Step level: If we define any variable at step level, it is available to that one particular step.
 
 
+=================================
+
+D: 27/08/2026
+
+A self-hosted runner is a machine that we own. It may be an EC2 instance, an on-premises server, or our own laptop that actually runs our GitHub Action jobs.
+
+Instead of GitHub providing the machine, we are providing our own machine to run the job.
+
+Below are the advantages that we get when we are using a self-hosted runner:
+- Need access to a private VPC or databases? The best option is a self-hosted runner.
+- Need custom hardware like specific GPUs, ARMs, and memory.
+- If we want to have preinstalled tools like Docker, kubectl, or node-specific versions.
+- For jobs that take longer than 6 hours, we can go with the self-hosted runners.
+- Need to deploy to internal servers? 
 
 
 
+sudo dnf install dotnet-sdk-8.0 -y
 
+Installing svc.sh as a system service 
+sudo ./svc.sh install
 
+Start the service. 
+sudo ./svc start
 
+To verify the status 
+sudo ./svc.sh status
 
+sudo ./svc.sh start
+sudo ./svc.sh stop
+sudo ./svc.sh uninstall
 
+=========================
 
+OIDC COnfiguration:
 
+https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
 
+For the provider URL: Use token.actions.githubusercontent.com
+For the "Audience": Use sts.amazonaws.com if you are using the official action.
+
+------------
+
+permissions:
+  id-token: write
+  contents: read
+
+Whenever we are using the OpenID connector, the GitHub configuration block has permissions. It is used to securely authenticate our workflow with external cloud providers without hardcoding the long-lived secrets. ID token write means the permission does not grant any ability to modify resources inside or outside. 
+
+1. GitHub issues ZWD token
+2. Cloud handshakes
+3. Identity verification happens
+
+-----------
 
 
 
