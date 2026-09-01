@@ -152,6 +152,35 @@ Whenever we are using the OpenID connector, the GitHub configuration block has p
 
 -----------
 
+Trivy: Trivy is an open-source all-in-one vulnerabilities and security scanner. It is highly popular in DevSecOps because it is extremely fast, stateless, and easy to integrate with CI/CD pipelines. 
+
+Other tools are generally designed for single-purpose scanning but Trivy can scan for CVEs, common vulnerable dependencies, exposures, and infrastructure-as-code misconfigurations. 
+
+It can help to identify hard-coded secrets. Also it can help with software bills of materials. 
+
+
+trivy fs . 				==> Scans the current file system
+
+trivy repo https://github.com/avizway1/awar09-ghademo.git
+
+trivy image avizway/docker-exam:multios
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
