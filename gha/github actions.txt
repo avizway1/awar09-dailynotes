@@ -166,15 +166,54 @@ trivy repo https://github.com/avizway1/awar09-ghademo.git
 trivy image avizway/docker-exam:multios
 
 
+===================================
+
+CAST : Comprehensive Testing : a methodology that combines multiple security tools. We can treat this as a mixed box that looks at the code, looks at the running application, and checks the third-party applications and integrations. 
+With CAST generally we find coding flaws, runtime errors, and vulnerable open-source libraries. 
+This will be part of the software lifecycle. 
+
+SAST : Satic Application Security Testing : bandit, sonarcloud/sonarqube
+It is a single tool that scans uncompiled source code. 
+The testing style is white box testing. It will inspect or check the entire code structure. With SAST scanning we can find coding practises, hard-coded passwords, and structural flaws. SAST comes into a primary shift-left mechanism. Shift left means we can identify the issue early in the development, when the developer is actually writing the code.
 
 
 
+Why Sonarcloud: Sonar Cloud supports almost 40+ programming languages and frameworks.
+
+We have quality gates. It acts as a go/no-go filter. It stops the code from processing if it fails to meet specific metrics like low code coverage or high bug density. 
+
+Bugs : it's a code error that will cause functional failure. 
+Vulnerabilities: a security weakness that can put our application at risk of exploitation 
+Code Smells : Poorly structured code that is not actually broken but it makes maintenance difficult 
+
+Duplication : Sonar can highlight the duplicated code blocks to prevent redundancy. 
+
+---
+
+Enable integration between Sonarcloud and github Actions.
 
 
+---
+
+Once our project's initial analysis is completed, we need to disable automatic analysis as this will conflict with the code pipeline. For that:
+1. Go to Sonar Cloud.
+2. Choose the project.
+3. Click on Administration in the bottom left sidebar.
+4. Click on Analysis Method.
+5. Choose Analysis as Off.
+
+Why: Sonar Cloud cannot run two analysis methods at the same time. If we keep this enabled we will get an error: "You are running CI analysis while automatic analysis is enabled." 
+
+organisation name: avizway1
+ProjectKey: avizway1_awar09-ghademo
+
+----
 
 
+Deploy to EKS using GHA:
 
 
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash --approve
 
 
 
