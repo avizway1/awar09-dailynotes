@@ -215,7 +215,7 @@ Deploy to EKS using GHA:
 
 eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster ekswithavinash --approve
 
-
+aws eks update-kubeconfig --region ap-south-1 --name ekswithavinash
 
 
 
